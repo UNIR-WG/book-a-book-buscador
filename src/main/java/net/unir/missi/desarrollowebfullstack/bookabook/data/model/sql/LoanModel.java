@@ -37,7 +37,7 @@ class LoanModel {
     private Date returnDate;
     @Column(name = "dueDate")
     private Date dueDate;
-    @Column(name = "dueDate")
+    @Column(name = "isReturned")
     private Boolean isReturned;
     @Column(name = "renewalCount")
     private Integer renewalCount;
