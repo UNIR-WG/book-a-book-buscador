@@ -42,9 +42,9 @@ public class AuthorController {
     public ResponseEntity<Object> getAuthorById(@PathVariable String idAuthor)
     {
         try {
-            if(service.getAuthorById(idAuthor).isPresent()) {
+            if(service.getAuthorById(idAuthor).isValid())
                 return ResponseEntity.ok(service.getAuthorById(idAuthor));
-            } else
+            else
                 return ResponseEntity.notFound().build();
 
 
@@ -75,8 +75,8 @@ public class AuthorController {
     public ResponseEntity<Author> modifyAuthorData(@PathVariable String idAuthor, @RequestBody Author authorData) {
         try {
             Author prev;
-            if(service.getAuthorById(idAuthor).isPresent()) {
-                prev = service.getAuthorById(idAuthor).get();
+            if(service.getAuthorById(idAuthor).isValid()) {
+                prev = service.getAuthorById(idAuthor);
                 return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
             } else
                 return ResponseEntity.notFound().build();
@@ -92,8 +92,8 @@ public class AuthorController {
     public ResponseEntity<Author> deleteAuthor(@PathVariable String idAuthor) {
         try {
             Author prev;
-            if(service.getAuthorById(idAuthor).isPresent()) {
-                prev = service.getAuthorById(idAuthor).get();
+            if(service.getAuthorById(idAuthor).isValid()) {
+                prev = service.getAuthorById(idAuthor);
                 return ResponseEntity.ok(service.deleteAuthor(prev));
             } else
                 return ResponseEntity.notFound().build();
