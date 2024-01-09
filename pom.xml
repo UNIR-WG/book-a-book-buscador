@@ -11,7 +11,7 @@
 	<groupId>net.unir.missi.desarrollowebfullstack</groupId>
 	<artifactId>bookabook</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>bookabook</name>
 	<description>Backend for the Book a Book application</description>
 	<properties>
