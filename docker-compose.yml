@@ -1,11 +1,11 @@
 ---
 version: "2.1"
 services:
-  echempad_app:
+  bookabook_app:
     image: aleixmt/bookabook:latest
     ports:
       - "0.0.0.0:80:8081"
-    restart: unless-stopped
+    #restart: unless-stopped
 
   postgres_db:
     image: postgres
