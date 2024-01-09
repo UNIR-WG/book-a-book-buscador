@@ -8,15 +8,16 @@
 		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>net.unir.missi.desarrollo-web-full-stack</groupId>
-	<artifactId>book-a-book</artifactId>
+	<groupId>net.unir.missi.desarrollowebfullstack</groupId>
+	<artifactId>bookabook</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>book-a-book</name>
+	<name>bookabook</name>
 	<description>Backend for the Book a Book application</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -55,6 +56,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>bookabook</finalName>  <!-- Final name for the WAR artifact -->
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

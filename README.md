@@ -99,7 +99,7 @@ software and its dependencies and environmental variables are resolved, so they 
 ```bash
 git clone https://github.com/AleixMT/book-a-book
 cd book-a-book
-./mvnw compile
+./mvnw clean package spring-boot:repackage -Dmaven.test.skip=true
 ```
 
 This will download all the necessary libraries to execute the project.
@@ -189,3 +189,19 @@ control the execution by using the menu at the bottom of the IDE.
 
 To send API requests to test the application you may use `postman`, but you can proceed with `curl` if you prefer to
 only use the terminal.
+
+
+
+# Docker usage
+
+## Build docker image
+```shell
+sudo docker build -t aleixmt/bookabook:latest . 
+```
+
+## Push image
+```shell
+sudo docker push aleixmt/bookabook:latest
+```
+
+&& sudo docker-compose down && sudo docker-compose up -d
