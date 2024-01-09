@@ -204,4 +204,35 @@ sudo docker build -t aleixmt/bookabook:latest .
 sudo docker push aleixmt/bookabook:latest
 ```
 
-&& sudo docker-compose down && sudo docker-compose up -d
+## Stop running containers
+```shell 
+sudo docker-compose down
+```
+
+## Rise containers
+```shell
+sudo docker-compose up -d
+```
+
+## One liner (build and redeploy with explicit push)
+You need a token against the user in dockerhub to be able to do an explicit push
+```shell
+sudo docker build -t aleixmt/echempad:latest . &&  sudo docker push aleixmt/echempad:latest && sudo docker-compose down && sudo docker-compose up -d
+```
+
+## One liner (build and redeploy with implicit push)
+You do not need the token since it is embedded into the github action used to push the image to dockerhub.
+
+First do a push with git in the master branch
+```shell
+git add .
+git commit -am "Added some changes"
+git push origin master
+```
+
+After that, go to github.com/AleixMT/book-a-book/actions and wait until the job is finished with green light. When 
+finished, bring the image back to your computer and deploy it locally using the docker-compose.
+```shell
+sudo docker-compose down && sudo docker-compose up -d
+```
+
