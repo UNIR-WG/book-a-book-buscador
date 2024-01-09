@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RunWithSpring" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="book-a-book" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="net.unir.missi.desarrollowebfullstack.bookabook.BookABookApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="KillProcessOnPort" run_configuration_type="ShConfigurationType" />
+    </method>
+  </configuration>
+</component>
