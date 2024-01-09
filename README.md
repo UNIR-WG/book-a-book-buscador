@@ -217,7 +217,7 @@ sudo docker-compose up -d
 ## One liner (build and redeploy with explicit push)
 You need a token against the user in dockerhub to be able to do an explicit push
 ```shell
-sudo docker build -t aleixmt/echempad:latest . &&  sudo docker push aleixmt/echempad:latest && sudo docker-compose down && sudo docker-compose up -d
+sudo docker build -t aleixmt/bookabook:latest . &&  sudo docker push aleixmt/bookabook:latest && sudo docker-compose down && sudo docker-compose up -d
 ```
 
 ## One liner (build and redeploy with implicit push)
