@@ -1,7 +1,10 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
 
 import java.util.Date;
@@ -9,8 +12,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "authors")
-@Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -47,4 +48,67 @@ public class AuthorModel {
     }
 
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public Date getBirthDate() {
+        return this.birthDate;
+    }
+
+    public String getNationality() {
+        return this.nationality;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getWebSite() {
+        return this.webSite;
+    }
+
+    public String getBiography() {
+        return this.biography;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
 }
