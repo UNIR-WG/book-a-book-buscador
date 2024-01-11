@@ -23,7 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-class LoanModel {
+public class LoanModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

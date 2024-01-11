@@ -21,7 +21,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-class BookModel {
+public class BookModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
