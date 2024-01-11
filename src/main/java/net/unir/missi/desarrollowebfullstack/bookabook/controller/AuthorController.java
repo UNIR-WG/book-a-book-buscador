@@ -33,7 +33,7 @@ public class AuthorController {
         try {
             return ResponseEntity.ok(service.getAllAuthors());
         } catch (Exception e) {
-            log.error("Error retrieving authors {}", e.getMessage(), e);
+            log.error("Error getting authors list {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -42,14 +42,14 @@ public class AuthorController {
     public ResponseEntity<Object> getAuthorById(@PathVariable String idAuthor)
     {
         try {
-            if(service.getAuthorById(idAuthor).isValid())
+            Author author = service.getAuthorById(idAuthor);
+            if(author!=null)
                 return ResponseEntity.ok(service.getAuthorById(idAuthor));
             else
                 return ResponseEntity.notFound().build();
 
-
         } catch (Exception e) {
-            log.error("Error modifying author {}", e.getMessage(), e);
+            log.error("Error getting author {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -59,14 +59,13 @@ public class AuthorController {
     {
         try {
             Author newAuthor = service.createAuthor(authorRequested);
-            if(newAuthor==null)
-                return ResponseEntity.badRequest().build();
-            else
+            if(newAuthor!=null && newAuthor.isValid())
                 return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
-
+            else
+                return ResponseEntity.badRequest().build();
 
         } catch (Exception e) {
-            log.error("Error retrieving author {}", e.getMessage(), e);
+            log.error("Error adding author {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -74,13 +73,11 @@ public class AuthorController {
     @PatchMapping("/authors/{idAuthor}")
     public ResponseEntity<Author> modifyAuthorData(@PathVariable String idAuthor, @RequestBody Author authorData) {
         try {
-            Author prev;
-            if(service.getAuthorById(idAuthor).isValid()) {
-                prev = service.getAuthorById(idAuthor);
-                return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
+            Author prev = service.getAuthorById(idAuthor);
+            if(prev!=null){
+                    return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
             } else
                 return ResponseEntity.notFound().build();
-
 
         } catch (Exception e) {
             log.error("Error modifying author {}", e.getMessage(), e);
@@ -91,13 +88,13 @@ public class AuthorController {
     @DeleteMapping("/authors/{idAuthor}")
     public ResponseEntity<Author> deleteAuthor(@PathVariable String idAuthor) {
         try {
-            Author prev;
-            if(service.getAuthorById(idAuthor).isValid()) {
-                prev = service.getAuthorById(idAuthor);
-                return ResponseEntity.ok(service.deleteAuthor(prev));
+            Author prev = service.getAuthorById(idAuthor);
+            if(prev!=null){
+                    prev = service.getAuthorById(idAuthor);
+                    return ResponseEntity.ok(service.deleteAuthor(prev));
+
             } else
                 return ResponseEntity.notFound().build();
-
 
         } catch (Exception e) {
             log.error("Error deleting author {}", e.getMessage(), e);
