@@ -8,7 +8,7 @@ import lombok.ToString;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
 
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -34,7 +34,14 @@ public class AuthorModel {
     private String webSite;
     @Column(name = "biography")
     private String biography;
+    @Column(name = "booksWritted")
+    @OneToMany(mappedBy = "author")
+    private List<BookModel> booksWritted;
 
+
+    public void setBooksWritted(List<BookModel> booksWritted) {
+        this.booksWritted = booksWritted;
+    }
 
     public AuthorModel(Author author) {
         this.id = author.getId();
@@ -45,8 +52,12 @@ public class AuthorModel {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
+        this.booksWritted = author.getBooksWritted();
     }
 
+    public List<BookModel> getBooksWritted() {
+        return booksWritted;
+    }
 
     public Long getId() {
         return this.id;

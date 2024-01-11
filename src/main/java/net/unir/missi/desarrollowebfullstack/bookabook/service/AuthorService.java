@@ -46,6 +46,7 @@ public class AuthorService {
              authorModel.setFirstName(authorData.getFirstName());
              authorModel.setLastName(authorData.getLastName());
              authorModel.setWebSite(authorData.getWebSite());
+             authorModel.setBooksWritted(authorData.getBooksWritted());
 
             repository.save(authorModel);
 
@@ -55,6 +56,7 @@ public class AuthorService {
             prev.setFirstName(authorData.getFirstName());
             prev.setLastName(authorData.getLastName());
             prev.setWebSite(authorData.getWebSite());
+            prev.setBooksWritted(authorData.getBooksWritted());
 
             return prev;
         }else
