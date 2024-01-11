@@ -1,6 +1,11 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +26,7 @@ public class BookModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "isbn")
-    private String ISBN;
+    private String isbn;
     @Column(name = "name")
     private String name;
     @Column(name = "language")
@@ -31,7 +36,5 @@ public class BookModel {
     @Column(name = "category")
     private String category;
     @Column(name = "authorId")
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private AuthorModel author;
+    private Long authorId;
 }

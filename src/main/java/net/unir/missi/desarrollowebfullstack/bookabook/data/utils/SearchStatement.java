@@ -1,5 +1,8 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.utils;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class SearchStatement {
 
     private String key;
