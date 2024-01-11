@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.BookRepository;
 

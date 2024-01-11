@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
 
 @Entity
 @Table(name = "books")
@@ -37,4 +38,13 @@ public class BookModel {
     private String category;
     @Column(name = "authorId")
     private Long authorId;
+
+    public void update(BookDto bookDto) {
+        this.isbn = bookDto.getIsbn();
+        this.name = bookDto.getName();
+        this.language = bookDto.getLanguage();
+        this.description = bookDto.getDescription();
+        this.category = bookDto.getCategory();
+        this.authorId = bookDto.getAuthorId();
+    }
 }
