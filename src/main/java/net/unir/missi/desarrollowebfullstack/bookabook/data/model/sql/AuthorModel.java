@@ -1,6 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,10 @@ public class AuthorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
     @Column(name = "firstName")
     private String firstName;
+    @NotNull
     @Column(name = "lastName")
     private String lastName;
     @Column(name = "birthDate")
