@@ -2,23 +2,23 @@ package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.BookModel;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-interface BookJpaRepository extends JpaRepository<BookModel, Long>, JpaSpecificationExecutor<BookModel> {
+interface BookJpaRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
-    List<BookModel> findByISBN(String ISBN);
+    List<Book> findByISBN(String ISBN);
 
-    List<BookModel> findByName(String name);
+    List<Book> findByName(String name);
 
-    List<BookModel> findByLanguage(String language);
+    List<Book> findByLanguage(String language);
 
-    List<BookModel> findByDescription(String description);
+    List<Book> findByDescription(String description);
 
-    List<BookModel> findByCategory(String category);
+    List<Book> findByCategory(String category);
 
-    List<BookModel> findByAuthor(Long id);
+    List<Book> findByAuthor(Long id);
 
 }

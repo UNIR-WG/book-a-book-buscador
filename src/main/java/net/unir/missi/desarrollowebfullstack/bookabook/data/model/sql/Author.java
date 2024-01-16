@@ -56,7 +56,7 @@ public class Author {
         this.biography = author.getBiography();
         this.booksWritted = author.getBooksWritted();
     }
-    
+
     public List<Book> getBooksWritted() {
         return booksWritted;
     }
