@@ -1,22 +1,21 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.AuthorModel;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
 import java.util.List;
 
 public interface IAuthorService {
 
-    List<Author> getAllAuthors();
+    List<AuthorRequest> getAllAuthors();
 
-    Author createAuthor(Author author) throws IllegalArgumentException;
+    AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException;
 
-    Author getAuthorById(String idAuthor);
+    AuthorRequest getAuthorById(String idAuthor);
 
-    Author modifyAuthorData(Author prev, Author authorData);
+    AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData);
 
 
-    Author deleteAuthor(Author prev);
+    AuthorRequest deleteAuthor(AuthorRequest prev);
 
 
 }
