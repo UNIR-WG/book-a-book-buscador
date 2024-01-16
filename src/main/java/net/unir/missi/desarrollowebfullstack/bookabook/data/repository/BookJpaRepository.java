@@ -1,5 +1,6 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
 
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
@@ -9,7 +10,7 @@ import java.util.List;
 
 interface BookJpaRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
-    List<Book> findByISBN(String ISBN);
+    List<Book> findByIsbn(String ISBN);
 
     List<Book> findByName(String name);
 
@@ -19,6 +20,6 @@ interface BookJpaRepository extends JpaRepository<Book, Long>, JpaSpecificationE
 
     List<Book> findByCategory(String category);
 
-    List<Book> findByAuthor(Long id);
+    List<Book> findByAuthor(Author author);
 
 }
