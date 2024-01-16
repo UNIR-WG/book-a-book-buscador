@@ -22,3 +22,4 @@ public interface BookService {
 
     BookModel updateBook(String bookId, BookDto updateRequest);
 }
+

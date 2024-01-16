@@ -11,13 +11,15 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorService {
+public class AuthorService implements IAuthorService{
     private final AuthorRepository repository;
 
+    @Override
     public List<Author> getAllAuthors(){
         return repository.findAll().stream().map(Author::new).collect(Collectors.toList());
     }
 
+    @Override
     public Author createAuthor(Author author) throws IllegalArgumentException {
         if(author.isValid())
         {
@@ -28,11 +30,13 @@ public class AuthorService {
             return null;
     }
 
+    @Override
     public Author getAuthorById(String idAuthor)
     {
         return repository.findById(Long.valueOf(idAuthor)).map(Author::new).orElse(null);
     }
 
+    @Override
     public Author modifyAuthorData(Author prev, Author authorData)
     {
         Author author = repository.findById(prev.getId()).map(Author::new).orElse(null);
@@ -63,6 +67,7 @@ public class AuthorService {
             return null;
     }
 
+    @Override
     public Author deleteAuthor(Author prev)
     {
         try {
