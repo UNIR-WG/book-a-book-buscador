@@ -7,7 +7,7 @@ services:
       - "0.0.0.0:8082:8081"
     #restart: unless-stopped
 
-  postgres_db:
+  postgres_buscador:
     image: postgres
     environment:
       - PUID=1001
