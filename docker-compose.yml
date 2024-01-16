@@ -1,8 +1,8 @@
 ---
 version: "2.1"
 services:
-  bookabook_app:
-    image: aleixmt/bookabook:latest
+  book-a-book-buscador:
+    image: aleixmt/book-a-book-buscador:latest
     ports:
       - "0.0.0.0:80:8081"
     #restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       - TZ=Etc/UTC
       - POSTGRES_PASSWORD=chemistry
       - POSTGRES_USER=aleixmt
-      - POSTGRES_DB=bookabook
+      - POSTGRES_DB=book-a-book-buscador
     ports:
       - "0.0.0.0:5433:5432"
     restart: unless-stopped
