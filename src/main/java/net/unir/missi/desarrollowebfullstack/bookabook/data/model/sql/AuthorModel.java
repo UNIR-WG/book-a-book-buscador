@@ -39,10 +39,10 @@ public class AuthorModel {
     private String biography;
     @Column(name = "booksWritted")
     @OneToMany(mappedBy = "author")
-    private List<BookModel> booksWritted;
+    private List<Book> booksWritted;
 
 
-    public void setBooksWritted(List<BookModel> booksWritted) {
+    public void setBooksWritted(List<Book> booksWritted) {
         this.booksWritted = booksWritted;
     }
 
@@ -58,7 +58,7 @@ public class AuthorModel {
         this.booksWritted = author.getBooksWritted();
     }
 
-    public List<BookModel> getBooksWritted() {
+    public List<Book> getBooksWritted() {
         return booksWritted;
     }
 
