@@ -2,22 +2,20 @@ package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
+import lombok.*;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
 import java.util.Date;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "authors")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class AuthorModel {
+public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -41,13 +39,14 @@ public class AuthorModel {
     @OneToMany(mappedBy = "author")
     private List<BookModel> booksWritted;
 
-
     public void setBooksWritted(List<BookModel> booksWritted) {
         this.booksWritted = booksWritted;
     }
 
-    public AuthorModel(Author author) {
-        this.id = author.getId();
+    public Author(AuthorRequest author) {
+        Long tempId = author.getId();
+        if(tempId!=null)
+            this.id = author.getId();
         this.firstName = author.getFirstName();
         this.lastName = author.getLastName();
         this.birthDate = author.getBirthDate();
@@ -58,45 +57,9 @@ public class AuthorModel {
         this.booksWritted = author.getBooksWritted();
     }
 
-    public List<BookModel> getBooksWritted() {
-        return booksWritted;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public Date getBirthDate() {
-        return this.birthDate;
-    }
-
-    public String getNationality() {
-        return this.nationality;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getWebSite() {
-        return this.webSite;
-    }
-
-    public String getBiography() {
-        return this.biography;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

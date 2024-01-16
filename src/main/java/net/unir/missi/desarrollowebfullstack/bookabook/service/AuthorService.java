@@ -2,8 +2,8 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.AuthorModel;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +15,15 @@ public class AuthorService implements IAuthorService{
     private final AuthorRepository repository;
 
     @Override
-    public List<Author> getAllAuthors(){
-        return repository.findAll().stream().map(Author::new).collect(Collectors.toList());
+    public List<AuthorRequest> getAllAuthors(){
+        return repository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
     }
 
     @Override
-    public Author createAuthor(Author author) throws IllegalArgumentException {
+    public AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException {
         if(author.isValid())
         {
-            AuthorModel authorModel = new AuthorModel(author);
+            Author authorModel = new Author(author);
             repository.save(authorModel);
             return author;
         }else
@@ -31,18 +31,18 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
-    public Author getAuthorById(String idAuthor)
+    public AuthorRequest getAuthorById(String idAuthor)
     {
-        return repository.findById(Long.valueOf(idAuthor)).map(Author::new).orElse(null);
+        return repository.findById(Long.valueOf(idAuthor)).map(AuthorRequest::new).orElse(null);
     }
 
     @Override
-    public Author modifyAuthorData(Author prev, Author authorData)
+    public AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData)
     {
-        Author author = repository.findById(prev.getId()).map(Author::new).orElse(null);
+        AuthorRequest author = repository.findById(prev.getId()).map(AuthorRequest::new).orElse(null);
 
          if (author!= null) {
-             AuthorModel authorModel = new AuthorModel(author);
+             Author authorModel = new Author(author);
 
              authorModel.setBiography(authorData.getBiography());
              authorModel.setEmail(authorData.getEmail());
@@ -54,24 +54,16 @@ public class AuthorService implements IAuthorService{
 
             repository.save(authorModel);
 
-            prev.setBiography(authorData.getBiography());
-            prev.setEmail(authorData.getEmail());
-            prev.setBirthDate(authorData.getBirthDate());
-            prev.setFirstName(authorData.getFirstName());
-            prev.setLastName(authorData.getLastName());
-            prev.setWebSite(authorData.getWebSite());
-            prev.setBooksWritted(authorData.getBooksWritted());
-
-            return prev;
+            return author;
         }else
             return null;
     }
 
     @Override
-    public Author deleteAuthor(Author prev)
+    public AuthorRequest deleteAuthor(AuthorRequest prev)
     {
         try {
-            AuthorModel authorModel = new AuthorModel(prev);
+            Author authorModel = new Author(prev);
             repository.delete(authorModel);
             return prev;
         }catch (Exception e){

@@ -1,21 +1,20 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.AuthorModel;
+import lombok.*;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.BookModel;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
-public class Author {
+public class AuthorRequest {
     private Long id;
     private String firstName;
     private String lastName;
@@ -26,7 +25,7 @@ public class Author {
     private String biography;
     private List<BookModel> booksWritted;
 
-    public Author(AuthorModel authorModel) {
+    public AuthorRequest(Author authorModel) {
         this.id = authorModel.getId();
         this.firstName = authorModel.getFirstName();
         this.lastName = authorModel.getLastName();

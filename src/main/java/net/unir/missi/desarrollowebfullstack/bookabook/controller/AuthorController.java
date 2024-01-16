@@ -1,7 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.controller;
 
 import org.springframework.http.HttpStatus;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ public class AuthorController {
     private final AuthorService service;
 
     @GetMapping("/authors")
-    public ResponseEntity<List<Author>> getAllAuthors()
+    public ResponseEntity<List<AuthorRequest>> getAllAuthors()
     {
         try {
             return ResponseEntity.ok(service.getAllAuthors());
@@ -42,7 +42,7 @@ public class AuthorController {
     public ResponseEntity<Object> getAuthorById(@PathVariable String idAuthor)
     {
         try {
-            Author author = service.getAuthorById(idAuthor);
+            AuthorRequest author = service.getAuthorById(idAuthor);
             if(author!=null)
                 return ResponseEntity.ok(service.getAuthorById(idAuthor));
             else
@@ -55,10 +55,10 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<Author> addAuthor(@RequestBody Author authorRequested)
+    public ResponseEntity<AuthorRequest> addAuthor(@RequestBody AuthorRequest authorRequested)
     {
         try {
-            Author newAuthor = service.createAuthor(authorRequested);
+            AuthorRequest newAuthor = service.createAuthor(authorRequested);
             if(newAuthor!=null && newAuthor.isValid())
                 return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
             else
@@ -71,9 +71,9 @@ public class AuthorController {
     }
 
     @PatchMapping("/authors/{idAuthor}")
-    public ResponseEntity<Author> modifyAuthorData(@PathVariable String idAuthor, @RequestBody Author authorData) {
+    public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
         try {
-            Author prev = service.getAuthorById(idAuthor);
+            AuthorRequest prev = service.getAuthorById(idAuthor);
             if(prev!=null){
                     return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
             } else
@@ -86,9 +86,9 @@ public class AuthorController {
     }
 
     @DeleteMapping("/authors/{idAuthor}")
-    public ResponseEntity<Author> deleteAuthor(@PathVariable String idAuthor) {
+    public ResponseEntity<AuthorRequest> deleteAuthor(@PathVariable String idAuthor) {
         try {
-            Author prev = service.getAuthorById(idAuthor);
+            AuthorRequest prev = service.getAuthorById(idAuthor);
             if(prev!=null){
                     prev = service.getAuthorById(idAuthor);
                     return ResponseEntity.ok(service.deleteAuthor(prev));
