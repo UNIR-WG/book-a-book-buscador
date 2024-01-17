@@ -44,5 +44,5 @@ jobs:
     steps:
       - uses: bervProject/railway-deploy@main
         with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          railway_token: ${{ secrets.RAILWAY_TOKEN_BUSCADOR }}
           service: ${{ secrets.RAILWAY_ID_BUSCADOR }}
