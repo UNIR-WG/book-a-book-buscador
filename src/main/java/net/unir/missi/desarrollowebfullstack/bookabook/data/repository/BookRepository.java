@@ -3,7 +3,7 @@ package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchOperation;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchStatement;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.BookModel;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
@@ -16,25 +16,25 @@ public class BookRepository {
 
     private final BookJpaRepository repository;
 
-    public List<BookModel> getBooks() {
+    public List<Book> getBooks() {
         return repository.findAll();
     }
 
-    public BookModel getById(Long id) {
+    public Book getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public BookModel save(BookModel book) {
+    public Book save(Book book) {
         return repository.save(book);
     }
 
-    public void delete(BookModel book) {
+    public void delete(Book book) {
         repository.delete(book);
     }
 
-    public List<BookModel> search(String isbn, String name, String language,
-                                  String description, String category, Long authorId) {
-        SearchCriteria<BookModel> spec = new SearchCriteria<>();
+    public List<Book> search(String isbn, String name, String language,
+                             String description, String category, Long authorId) {
+        SearchCriteria<Book> spec = new SearchCriteria<>();
         if (StringUtils.isNotBlank(isbn)) {
             spec.add(new SearchStatement("isbn", isbn, SearchOperation.MATCH));
         }

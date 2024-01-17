@@ -1,8 +1,11 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.BookModel;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +26,7 @@ public class AuthorRequest {
     private String email;
     private String webSite;
     private String biography;
-    private List<BookModel> booksWritted;
+    private List<Book> booksWritted;
 
     public AuthorRequest(Author authorModel) {
         this.id = authorModel.getId();

@@ -37,9 +37,9 @@ public class Author {
     private String biography;
     @Column(name = "booksWritted")
     @OneToMany(mappedBy = "author")
-    private List<BookModel> booksWritted;
+    private List<Book> booksWritted;
 
-    public void setBooksWritted(List<BookModel> booksWritted) {
+    public void setBooksWritted(List<Book> booksWritted) {
         this.booksWritted = booksWritted;
     }
 
@@ -57,9 +57,45 @@ public class Author {
         this.booksWritted = author.getBooksWritted();
     }
 
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
+    public List<Book> getBooksWritted() {
+        return booksWritted;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public Date getBirthDate() {
+        return this.birthDate;
+    }
+
+    public String getNationality() {
+        return this.nationality;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getWebSite() {
+        return this.webSite;
+    }
+
+    public String getBiography() {
+        return this.biography;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

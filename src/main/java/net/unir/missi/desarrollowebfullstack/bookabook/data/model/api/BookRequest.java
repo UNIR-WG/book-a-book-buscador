@@ -1,15 +1,14 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateBookRequest {
+@Builder
+@ToString
+public class BookRequest {
 
     private String isbn;
     private String name;

@@ -2,24 +2,116 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import java.util.List;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.BookModel;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.CreateBookRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.BookRepository;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-public interface BookService {
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
 
-    List<BookModel> getBooks(String isbn, String name, String language, String description,
-                             String category, Long authorId);
+@Service
+@Slf4j
+public class BookService implements IBookService {
 
-    BookModel getBook(String bookId);
+    @Autowired
+    private BookRepository repository;
 
-    Boolean removeBook(String bookId);
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    BookModel createBook(CreateBookRequest request);
+    @Override
+    public List<Book> getBooks(String isbn, String name, String language, String description,
+                               String category, Long authorId) {
 
-    BookModel updateBook(String bookId, String updateRequest);
+        if (StringUtils.hasLength(isbn) || StringUtils.hasLength(name) ||
+                StringUtils.hasLength(language) || StringUtils.hasLength(description)
+                || StringUtils.hasLength(category) || authorId != 0) {
+            return repository.search(isbn, name, language, description, category, authorId);
+        }
 
-    BookModel updateBook(String bookId, BookDto updateRequest);
+        List<Book> books = repository.getBooks();
+        return books.isEmpty() ? null : books;
+    }
+
+    @Override
+    public Book getBook(String bookId) {
+        return repository.getById(Long.valueOf(bookId));
+    }
+
+    @Override
+    public Boolean removeBook(String bookId) {
+
+        Book book = repository.getById(Long.valueOf(bookId));
+
+        if (book != null) {
+            repository.delete(book);
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    public Book createBook(BookRequest request) {
+
+        if (request != null && StringUtils.hasLength(request.getIsbn().trim())
+                && StringUtils.hasLength(request.getName().trim())
+                && StringUtils.hasLength(request.getLanguage().trim())
+                && StringUtils.hasLength(request.getDescription().trim())
+                && StringUtils.hasLength(request.getCategory().trim())
+                && request.getAuthorId() != 0) {
+
+            Book book = Book.builder().isbn(request.getIsbn())
+                    .name(request.getName())
+                    .language(request.getLanguage())
+                    .description(request.getDescription())
+                    .category(request.getCategory()).build();
+
+            return repository.save(book);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Book updateBook(String bookId, String request) {
+
+        //PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
+        Book book = repository.getById(Long.valueOf(bookId));
+        if (book != null) {
+            try {
+                JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
+                JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(book)));
+                Book patched = objectMapper.treeToValue(target, Book.class);
+                repository.save(patched);
+                return patched;
+            } catch (JsonProcessingException | JsonPatchException e) {
+                log.error("Error updating book {}", bookId, e);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Book updateBook(String bookId, BookRequest updateRequest) {
+        Book book = repository.getById(Long.valueOf(bookId));
+        if (book != null) {
+            book.update(updateRequest);
+            repository.save(book);
+            return book;
+        } else {
+            return null;
+        }
+    }
+
 }
-

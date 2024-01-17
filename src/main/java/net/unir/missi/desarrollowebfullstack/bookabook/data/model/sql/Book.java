@@ -1,18 +1,14 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 
 @Entity
 @Table(name = "books")
@@ -22,7 +18,7 @@ import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
 @NoArgsConstructor
 @Builder
 @ToString
-public class BookModel {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -36,15 +32,16 @@ public class BookModel {
     private String description;
     @Column(name = "category")
     private String category;
-    @Column(name = "authorId")
-    private Long authorId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
+    private Author author;
 
-    public void update(BookDto bookDto) {
-        this.isbn = bookDto.getIsbn();
-        this.name = bookDto.getName();
-        this.language = bookDto.getLanguage();
-        this.description = bookDto.getDescription();
-        this.category = bookDto.getCategory();
-        this.authorId = bookDto.getAuthorId();
+    public void update(BookRequest bookRequest) {
+        this.isbn = bookRequest.getIsbn();
+        this.name = bookRequest.getName();
+        this.language = bookRequest.getLanguage();
+        this.description = bookRequest.getDescription();
+        this.category = bookRequest.getCategory();
     }
+
 }
