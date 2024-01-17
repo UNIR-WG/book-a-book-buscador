@@ -40,12 +40,12 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{idAuthor}")
-    public ResponseEntity<Object> getAuthorById(@PathVariable String idAuthor)
+    public ResponseEntity<AuthorRequest> getAuthorById(@PathVariable String idAuthor)
     {
         try {
             AuthorRequest author = service.getAuthorById(idAuthor);
             if(author!=null)
-                return ResponseEntity.ok(service.getAuthorById(idAuthor));
+                return ResponseEntity.ok(author);
             else
                 return ResponseEntity.notFound().build();
 
@@ -59,9 +59,10 @@ public class AuthorController {
     public ResponseEntity<AuthorRequest> addAuthor(@RequestBody AuthorRequest authorRequested)
     {
         try {
-            AuthorRequest newAuthor = service.createAuthor(authorRequested);
-            if(newAuthor!=null && newAuthor.isValid())
+            if(authorRequested!=null && authorRequested.isValid()) {
+                AuthorRequest newAuthor = service.createAuthor(authorRequested);
                 return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
+            }
             else
                 return ResponseEntity.badRequest().build();
 

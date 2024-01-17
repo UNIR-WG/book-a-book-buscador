@@ -15,27 +15,39 @@ public class AuthorService implements IAuthorService{
     private final AuthorRepository repository;
 
     @Override
-    public List<AuthorRequest> getAllAuthors(){
-        return repository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
+    public List<AuthorRequest> getAllAuthors() throws RuntimeException
+    {
+        try {
+            return repository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
     }
 
     @Override
-    public AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException {
-
+    public AuthorRequest createAuthor(AuthorRequest author) throws RuntimeException
+    {
+        try {
             Author authorModel = new Author(author);
             repository.save(authorModel);
             return author;
-
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
     }
 
     @Override
-    public AuthorRequest getAuthorById(String idAuthor)
+    public AuthorRequest getAuthorById(String idAuthor) throws RuntimeException
     {
-        return repository.findById(Long.valueOf(idAuthor)).map(AuthorRequest::new).orElse(null);
+        try {
+            return repository.findById(Long.valueOf(idAuthor)).map(AuthorRequest::new).orElse(null);
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
     }
 
     @Override
-    public AuthorRequest modifyAuthorData(AuthorRequest tempAuthor, AuthorRequest authorData)
+    public AuthorRequest modifyAuthorData(AuthorRequest tempAuthor, AuthorRequest authorData) throws RuntimeException
     {
 
         //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
@@ -64,29 +76,39 @@ public class AuthorService implements IAuthorService{
              tempAuthor.setBooksWritted(authorData.getBooksWritted());
 
          Author authorModel = new Author(tempAuthor);
+        try {
+            repository.save(authorModel);
 
-         repository.save(authorModel);
-
-        return tempAuthor;
+            return tempAuthor;
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
 
     }
 
     @Override
-    public AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData)
+    public AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData) throws RuntimeException
     {
         prev.modifyAllParameters(authorData);
         Author authorModel = new Author(prev);
-        repository.save(authorModel);
-
-        return prev;
+        try {
+            repository.save(authorModel);
+            return prev;
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
     }
 
     @Override
-    public AuthorRequest deleteAuthor(AuthorRequest prev)
+    public AuthorRequest deleteAuthor(AuthorRequest prev) throws RuntimeException
     {
-            Author authorModel = new Author(prev);
+        Author authorModel = new Author(prev);
+        try {
             repository.delete(authorModel);
             return prev;
+        }catch (Exception e){
+            throw new RuntimeException("Database Failed;");
+        }
     }
 
 }

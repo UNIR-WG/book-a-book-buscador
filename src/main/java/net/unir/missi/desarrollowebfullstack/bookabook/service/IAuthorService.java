@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IAuthorService {
 
-    List<AuthorRequest> getAllAuthors();
+    List<AuthorRequest> getAllAuthors() throws Exception;
 
     AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException;
 
