@@ -42,7 +42,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: bervProject/railway-deploy@main
+      - name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: deploy to railway
+        uses: bervProject/railway-deploy@main
         with:
           railway_token: ${{ secrets.RAILWAY_TOKEN }}
           service: ${{ secrets.RAILWAY_ID_BUSCADOR }}
