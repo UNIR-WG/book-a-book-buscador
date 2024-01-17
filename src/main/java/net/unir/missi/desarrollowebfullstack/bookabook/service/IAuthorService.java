@@ -12,8 +12,9 @@ public interface IAuthorService {
 
     AuthorRequest getAuthorById(String idAuthor);
 
-    AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData);
+    AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData);
 
+    AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData);
 
     AuthorRequest deleteAuthor(AuthorRequest prev);
 

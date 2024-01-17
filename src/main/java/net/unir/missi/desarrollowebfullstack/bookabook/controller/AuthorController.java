@@ -6,6 +6,7 @@ import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,12 +71,28 @@ public class AuthorController {
         }
     }
 
+    @PutMapping("/authors/{idAuthor}")
+    public ResponseEntity<AuthorRequest> modifyAllAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
+        try {
+            AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
+            //Si el autor del id que recibimos es nulo, no hacemos la modificacion
+            if(tempAuthor!=null){
+                    return ResponseEntity.ok(service.modifyAllAuthorData(tempAuthor, authorData));
+            } else
+                return ResponseEntity.notFound().build();
+
+        } catch (Exception e) {
+            log.error("Error modifying author {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PatchMapping("/authors/{idAuthor}")
     public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
         try {
             AuthorRequest prev = service.getAuthorById(idAuthor);
             if(prev!=null){
-                    return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
+                return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
             } else
                 return ResponseEntity.notFound().build();
 
@@ -90,9 +107,7 @@ public class AuthorController {
         try {
             AuthorRequest prev = service.getAuthorById(idAuthor);
             if(prev!=null){
-                    prev = service.getAuthorById(idAuthor);
-                    return ResponseEntity.ok(service.deleteAuthor(prev));
-
+                return ResponseEntity.ok(service.deleteAuthor(prev));
             } else
                 return ResponseEntity.notFound().build();
 

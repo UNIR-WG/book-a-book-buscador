@@ -37,6 +37,17 @@ public class AuthorRequest {
         this.booksWritted = authorModel.getBooksWritted();
     }
 
+    public void modifyAllParameters(AuthorRequest author) {
+        this.firstName = author.getFirstName();
+        this.lastName = author.getLastName();
+        this.birthDate = author.getBirthDate();
+        this.nationality = author.getNationality();
+        this.email = author.getEmail();
+        this.webSite = author.getWebSite();
+        this.biography = author.getBiography();
+        this.booksWritted = author.getBooksWritted();
+    }
+
     public boolean isValid() {
         return !Objects.equals(this.firstName, "") && !Objects.equals(this.lastName, "")
                 && this.birthDate != null && !Objects.equals(this.email, "")

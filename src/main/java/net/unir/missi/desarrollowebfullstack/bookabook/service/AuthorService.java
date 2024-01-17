@@ -21,13 +21,11 @@ public class AuthorService implements IAuthorService{
 
     @Override
     public AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException {
-        if(author.isValid())
-        {
+
             Author authorModel = new Author(author);
             repository.save(authorModel);
             return author;
-        }else
-            return null;
+
     }
 
     @Override
@@ -37,38 +35,58 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
-    public AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData)
+    public AuthorRequest modifyAuthorData(AuthorRequest tempAuthor, AuthorRequest authorData)
     {
-        AuthorRequest author = repository.findById(prev.getId()).map(AuthorRequest::new).orElse(null);
 
-         if (author!= null) {
-             Author authorModel = new Author(author);
+        //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
+          if(authorData.getFirstName()!=null)
+              tempAuthor.setFirstName(authorData.getFirstName());
 
-             authorModel.setBiography(authorData.getBiography());
-             authorModel.setEmail(authorData.getEmail());
-             authorModel.setBirthDate(authorData.getBirthDate());
-             authorModel.setFirstName(authorData.getFirstName());
-             authorModel.setLastName(authorData.getLastName());
-             authorModel.setWebSite(authorData.getWebSite());
-             authorModel.setBooksWritted(authorData.getBooksWritted());
+         if(authorData.getLastName()!=null)
+             tempAuthor.setLastName(authorData.getLastName());
 
-            repository.save(authorModel);
+         if(authorData.getBirthDate()!=null)
+             tempAuthor.setBirthDate(authorData.getBirthDate());
 
-            return author;
-        }else
-            return null;
+         if(authorData.getEmail()!=null)
+             tempAuthor.setEmail(authorData.getEmail());
+
+         if(authorData.getWebSite()!=null)
+             tempAuthor.setWebSite(authorData.getWebSite());
+
+         if(authorData.getNationality()!=null)
+             tempAuthor.setNationality(authorData.getNationality());
+
+         if(authorData.getBiography()!=null)
+             tempAuthor.setBiography(authorData.getBiography());
+
+         if(authorData.getBooksWritted()!=null)
+             tempAuthor.setBooksWritted(authorData.getBooksWritted());
+
+         Author authorModel = new Author(tempAuthor);
+
+         repository.save(authorModel);
+
+        return tempAuthor;
+
+    }
+
+    @Override
+    public AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData)
+    {
+        prev.modifyAllParameters(authorData);
+        Author authorModel = new Author(prev);
+        repository.save(authorModel);
+
+        return prev;
     }
 
     @Override
     public AuthorRequest deleteAuthor(AuthorRequest prev)
     {
-        try {
             Author authorModel = new Author(prev);
             repository.delete(authorModel);
             return prev;
-        }catch (Exception e){
-            return null;
-        }
     }
 
 }
