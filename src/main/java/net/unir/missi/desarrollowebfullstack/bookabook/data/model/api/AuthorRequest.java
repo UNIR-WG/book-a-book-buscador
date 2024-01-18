@@ -1,11 +1,8 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +12,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Getter
-@Setter
 @ToString
 public class AuthorRequest {
     private Long id;
@@ -26,7 +22,8 @@ public class AuthorRequest {
     private String email;
     private String webSite;
     private String biography;
-    private List<Book> booksWritted;
+    private List<Long> booksWrittedId;
+
 
     public AuthorRequest(Author authorModel) {
         this.id = authorModel.getId();
@@ -37,18 +34,8 @@ public class AuthorRequest {
         this.email = authorModel.getEmail();
         this.webSite = authorModel.getWebSite();
         this.biography = authorModel.getBiography();
-        this.booksWritted = authorModel.getBooksWritted();
-    }
-
-    public void modifyAllParameters(AuthorRequest author) {
-        this.firstName = author.getFirstName();
-        this.lastName = author.getLastName();
-        this.birthDate = author.getBirthDate();
-        this.nationality = author.getNationality();
-        this.email = author.getEmail();
-        this.webSite = author.getWebSite();
-        this.biography = author.getBiography();
-        this.booksWritted = author.getBooksWritted();
+        for (Book book : authorModel.getBooksWritted())
+            this.booksWrittedId.add(book.getId());
     }
 
     public boolean isValid() {
@@ -57,5 +44,38 @@ public class AuthorRequest {
                 && !Objects.equals(this.nationality, "");
 
     }
+
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+//    public void setBooksWrittedId(List<Long> booksWrittedId) {
+//        this.booksWrittedId.addAll(booksWrittedId);
+//    }
 
 }

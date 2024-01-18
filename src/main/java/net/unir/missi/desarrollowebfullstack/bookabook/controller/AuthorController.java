@@ -91,9 +91,9 @@ public class AuthorController {
     @PatchMapping("/authors/{idAuthor}")
     public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
         try {
-            AuthorRequest prev = service.getAuthorById(idAuthor);
-            if(prev!=null){
-                return ResponseEntity.ok(service.modifyAuthorData(prev, authorData));
+            AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
+            if(tempAuthor!=null){
+                return ResponseEntity.ok(service.modifyAuthorData(tempAuthor, authorData));
             } else
                 return ResponseEntity.notFound().build();
 

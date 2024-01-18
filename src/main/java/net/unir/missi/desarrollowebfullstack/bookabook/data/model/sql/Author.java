@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
-        this.booksWritted = author.getBooksWritted();
     }
 
     public List<Book> getBooksWritted() {
