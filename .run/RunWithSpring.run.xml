@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RunWithSpring" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="bookabook" />
+    <module name="buscador" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="net.unir.missi.desarrollowebfullstack.bookabook.BookABookApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
