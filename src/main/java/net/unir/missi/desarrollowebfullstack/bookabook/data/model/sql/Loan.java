@@ -16,14 +16,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "books")
+@Table(name = "loans")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class LoanModel {
+public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

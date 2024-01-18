@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface IAuthorService {
 
-    List<AuthorRequest> getAllAuthors() throws Exception;
+    List<AuthorRequest> getAllAuthors() throws RuntimeException;
 
-    AuthorRequest createAuthor(AuthorRequest author) throws IllegalArgumentException;
+    AuthorRequest createAuthor(AuthorRequest author) throws RuntimeException;
 
-    AuthorRequest getAuthorById(String idAuthor);
+    AuthorRequest getAuthorById(String idAuthor) throws RuntimeException;
 
-    AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData);
+    AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData) throws RuntimeException;
 
-    AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData);
+    AuthorRequest modifyAuthorData(AuthorRequest prev, AuthorRequest authorData) throws RuntimeException;
 
-    AuthorRequest deleteAuthor(AuthorRequest prev);
+    AuthorRequest deleteAuthor(AuthorRequest prev) throws RuntimeException;
 
 
 }

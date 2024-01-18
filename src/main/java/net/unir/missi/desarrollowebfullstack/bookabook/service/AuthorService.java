@@ -3,6 +3,8 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorService implements IAuthorService{
     private final AuthorRepository repository;
     private final BookRepository bookRepository;
@@ -44,9 +47,14 @@ public class AuthorService implements IAuthorService{
     public AuthorRequest getAuthorById(String idAuthor) throws RuntimeException
     {
         try {
-            return repository.findById(Long.valueOf(idAuthor)).map(AuthorRequest::new).orElse(null);
+            Author authorModel = repository.findById(Long.valueOf(idAuthor)).map(Author::new).orElse(null);
+            log.error("ERROR ID: "+authorModel);
+            if(authorModel!=null)
+                return new AuthorRequest(authorModel);
+            else
+                return null;
         }catch (Exception e){
-            throw new RuntimeException("Database Failed;");
+            throw new RuntimeException("Database Failed;"+e.getMessage());
         }
     }
 

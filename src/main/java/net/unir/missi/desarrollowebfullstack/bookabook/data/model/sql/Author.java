@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class Author {
+public class Author implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -37,17 +38,11 @@ public class Author {
     @Column(name = "biography")
     private String biography;
     @Column(name = "booksWritted")
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private List<Book> booksWritted;
 
-    public void setBooksWritted(List<Book> booksWritted) {
-        this.booksWritted = booksWritted;
-    }
-
-    public Author(AuthorRequest author) {
-        Long tempId = author.getId();
-        if(tempId!=null)
-            this.id = author.getId();
+    public Author(Author author) {
+        this.id = author.getId();
         this.firstName = author.getFirstName();
         this.lastName = author.getLastName();
         this.birthDate = author.getBirthDate();
@@ -55,6 +50,23 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
+        this.booksWritted = author.getBooksWritted();
+    }
+
+    public void setBooksWritted(List<Book> booksWritted) {
+        this.booksWritted = booksWritted;
+    }
+
+    public Author(AuthorRequest author) {
+        this.id = author.getId();
+        this.firstName = author.getFirstName();
+        this.lastName = author.getLastName();
+        this.birthDate = author.getBirthDate();
+        this.nationality = author.getNationality();
+        this.email = author.getEmail();
+        this.webSite = author.getWebSite();
+        this.biography = author.getBiography();
+        this.booksWritted = new ArrayList<>();
     }
 
     public List<Book> getBooksWritted() {

@@ -4,13 +4,12 @@ import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @Getter
 @ToString
 public class AuthorRequest {
@@ -34,17 +33,17 @@ public class AuthorRequest {
         this.email = authorModel.getEmail();
         this.webSite = authorModel.getWebSite();
         this.biography = authorModel.getBiography();
-        for (Book book : authorModel.getBooksWritted())
-            this.booksWrittedId.add(book.getId());
+        if( authorModel.getBooksWritted()!=null)
+            for (Book book : authorModel.getBooksWritted())
+                this.booksWrittedId.add(book.getId());
+        else{
+            this.booksWrittedId = new ArrayList<>();
+        }
     }
 
-    public boolean isValid() {
-        return !Objects.equals(this.firstName, "") && !Objects.equals(this.lastName, "")
-                && this.birthDate != null && !Objects.equals(this.email, "")
-                && !Objects.equals(this.nationality, "");
 
+    public AuthorRequest() {
     }
-
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

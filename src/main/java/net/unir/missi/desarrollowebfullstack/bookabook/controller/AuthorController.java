@@ -59,7 +59,7 @@ public class AuthorController {
     public ResponseEntity<AuthorRequest> addAuthor(@RequestBody AuthorRequest authorRequested)
     {
         try {
-            if(authorRequested!=null && authorRequested.isValid()) {
+            if(authorRequested!=null) {
                 AuthorRequest newAuthor = service.createAuthor(authorRequested);
                 return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
             }
