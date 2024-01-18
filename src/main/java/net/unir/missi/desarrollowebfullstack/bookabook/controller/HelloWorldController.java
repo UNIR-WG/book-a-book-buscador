@@ -13,9 +13,9 @@ public class HelloWorldController {
     public ResponseEntity<String> helloWorld()
     {
         try {
-            return ResponseEntity.ok("Hello World!");
+            return ResponseEntity.ok("Hello World from buscador!");
         } catch (Exception e) {
-            Logger.getGlobal().warning("Error saying hello" + e.getMessage());
+            Logger.getGlobal().warning("Error saying hello from buscador" + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
