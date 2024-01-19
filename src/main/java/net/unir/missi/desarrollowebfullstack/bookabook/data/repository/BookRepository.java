@@ -1,5 +1,6 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
 
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchOperation;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchStatement;
@@ -33,7 +34,7 @@ public class BookRepository {
     }
 
     public List<Book> search(String isbn, String name, String language,
-                             String description, String category, Long authorId) {
+                             String description, String category, Author author) {
         SearchCriteria<Book> spec = new SearchCriteria<>();
         if (StringUtils.isNotBlank(isbn)) {
             spec.add(new SearchStatement("isbn", isbn, SearchOperation.MATCH));
@@ -55,8 +56,8 @@ public class BookRepository {
             spec.add(new SearchStatement("category", category, SearchOperation.EQUAL));
         }
 
-        if (authorId != 0) {
-            spec.add(new SearchStatement("authorId", authorId, SearchOperation.EQUAL));
+        if (author != null) {
+            spec.add(new SearchStatement("author", author, SearchOperation.EQUAL));
         }
         return repository.findAll(spec);
     }

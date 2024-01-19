@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookDto;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.DeleteResponse;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.IBookService;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,7 @@ public class BookController {
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
-    public ResponseEntity<List<Book>> getBooks(
+    public ResponseEntity<List<BookResponse>> getBooks(
             @RequestHeader Map<String, String> headers,
             @Parameter(name = "isbn", description = "Código ISBN del libro", example = "", required = false)
             @RequestParam(required = false) String isbn,
@@ -52,7 +54,7 @@ public class BookController {
             @RequestParam(required = false) Long authorId) {
 
         log.info("headers: {}", headers);
-        List<Book> books = service.getBooks(isbn, name, language, description, category, authorId);
+        List<BookResponse> books = service.getBooks(isbn, name, language, description, category, authorId);
 
         if (books != null) {
             return ResponseEntity.ok(books);
@@ -73,10 +75,10 @@ public class BookController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "No se ha encontrado el libro con el identificador indicado.")
-    public ResponseEntity<Book> getBook(@PathVariable String bookId) {
+    public ResponseEntity<BookResponse> getBook(@PathVariable String bookId) {
 
         log.info("Request received for book {}", bookId);
-        Book book = service.getBook(bookId);
+        BookResponse book = service.getBook(bookId);
 
         if (book != null) {
             return ResponseEntity.ok(book);
@@ -98,12 +100,13 @@ public class BookController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "No se ha encontrado el libro con el identificador indicado.")
-    public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
+    public ResponseEntity<DeleteResponse> deleteBook(@PathVariable String bookId) {
 
         Boolean removed = service.removeBook(bookId);
 
         if (Boolean.TRUE.equals(removed)) {
-            return ResponseEntity.ok().build();
+            DeleteResponse deleteResponse = DeleteResponse.builder().message("Book deleted").build();
+            return ResponseEntity.ok(deleteResponse);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -126,9 +129,9 @@ public class BookController {
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Datos incorrectos introducidos.")
-    public ResponseEntity<Book> addBook(@RequestBody BookRequest request) {
+    public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
 
-        Book createdBook = service.createBook(request);
+        BookResponse createdBook = service.createBook(request);
 
         if (createdBook != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
