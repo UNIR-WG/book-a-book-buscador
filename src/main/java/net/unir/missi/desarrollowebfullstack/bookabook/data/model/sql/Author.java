@@ -1,25 +1,29 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-@Getter
 @Entity
 @Table(name = "authors")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class Author implements Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -39,8 +43,8 @@ public class Author implements Serializable {
     private String webSite;
     @Column(name = "biography")
     private String biography;
-    @Column(name = "booksWritted")
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Book> booksWritted;
 
     public Author(Author author) {
@@ -55,19 +59,6 @@ public class Author implements Serializable {
         this.booksWritted = author.getBooksWritted();
     }
 
-    public void addBook(Book book) {
-        booksWritted.add(book);
-        book.setAuthor(this);
-    }
-
-    public void removeBook(Book book) {
-        booksWritted.remove(book);
-        book.setAuthor(null);
-    }
-
-    public void setBooksWritted(List<Book> booksWritted) {
-        this.booksWritted = booksWritted;
-    }
 
     public Author(AuthorRequest author) {
         this.id = author.getId();
@@ -79,6 +70,7 @@ public class Author implements Serializable {
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
         this.booksWritted = new ArrayList<>();
+
     }
 
     public List<Book> getBooksWritted() {
@@ -148,4 +140,6 @@ public class Author implements Serializable {
     public void setBiography(String biography) {
         this.biography = biography;
     }
+
+
 }

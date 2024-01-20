@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "books")
 @Getter
@@ -32,8 +32,9 @@ public class Book {
     private String description;
     @Column(name = "category")
     private String category;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private Author author;
 
     public void update(BookRequest bookRequest) {

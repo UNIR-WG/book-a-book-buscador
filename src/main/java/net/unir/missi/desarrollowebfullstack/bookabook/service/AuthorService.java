@@ -13,23 +13,22 @@ import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.AuthorRepository;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
+
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class AuthorService implements IAuthorService{
-
-    private final AuthorRepository repository;
-    private final BookRepository bookRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Override
     public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookWritted) throws RuntimeException
     {
         try {
-            log.error("ERROR ENTRA "+firstName+"  "+lastName+"  "+birthDate+"  "+nationality+"  "+email+"  "+webSite+"  "+biography+"  "+bookWritted);
 
             if (firstName!=null
                     || lastName !=null
@@ -42,11 +41,9 @@ public class AuthorService implements IAuthorService{
 
                 Book bookList = bookRepository.getById(bookWritted);
 
-
-                return repository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
+                return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
             }else {
-                log.error("ERROR ENTRA AL ESLE");
-                return repository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
+                return authorRepository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
             }
         }catch (Exception e){
             throw new RuntimeException("Database Failed;"+e.getMessage(),e);
@@ -59,7 +56,7 @@ public class AuthorService implements IAuthorService{
         try {
             Author authorModel = new Author(author);
 
-            return new AuthorRequest(repository.save(authorModel));
+            return new AuthorRequest(authorRepository.save(authorModel));
         }catch (Exception e){
             throw new RuntimeException("Database Failed;");
         }
@@ -69,7 +66,8 @@ public class AuthorService implements IAuthorService{
     public AuthorRequest getAuthorById(String idAuthor) throws RuntimeException
     {
         try {
-            Author authorModel = repository.getById(Long.valueOf(idAuthor));
+            log.error("ERROR antes de modelo");
+            Author authorModel = authorRepository.getById(Long.valueOf(idAuthor));
 
             if(authorModel!=null)
                 return new AuthorRequest(authorModel);
@@ -84,7 +82,7 @@ public class AuthorService implements IAuthorService{
     public AuthorRequest modifyAuthorData(AuthorRequest tempAuthor, AuthorRequest authorData) throws RuntimeException
     {
         try {
-            Author authorToChange = repository.getById(tempAuthor.getId());
+            Author authorToChange = authorRepository.getById(tempAuthor.getId());
             if(authorToChange!=null) {
 
                 //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
@@ -109,7 +107,7 @@ public class AuthorService implements IAuthorService{
                 if (authorData.getBiography() != null)
                     authorToChange.setBiography(authorData.getBiography());
 
-                repository.save(authorToChange);
+                authorRepository.save(authorToChange);
 
                 return new AuthorRequest(authorToChange);
             }else
@@ -124,7 +122,7 @@ public class AuthorService implements IAuthorService{
     public AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData) throws RuntimeException
     {
         try {
-            Author optionalAuthor = repository.getById(prev.getId());
+            Author optionalAuthor = authorRepository.getById(prev.getId());
             if(optionalAuthor!=null) {
                 Author authorToChange = optionalAuthor;
                 //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
@@ -142,7 +140,7 @@ public class AuthorService implements IAuthorService{
 
                     authorToChange.setBiography(authorData.getBiography());
 
-                repository.save(authorToChange);
+                authorRepository.save(authorToChange);
 
                 return new AuthorRequest(authorToChange);
             }else
@@ -155,10 +153,10 @@ public class AuthorService implements IAuthorService{
     @Override
     public AuthorRequest deleteAuthor(AuthorRequest prev) throws RuntimeException
     {
-        Author author = repository.getById(prev.getId());
+        Author author = authorRepository.getById(prev.getId());
         try {
             if(author!=null) {
-                repository.delete(author);
+                authorRepository.delete(author);
                 return prev;
             }else{
                 throw new RuntimeException("Database Failed;");
