@@ -32,7 +32,7 @@ public class Book {
     private String description;
     @Column(name = "category")
     private String category;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
 
