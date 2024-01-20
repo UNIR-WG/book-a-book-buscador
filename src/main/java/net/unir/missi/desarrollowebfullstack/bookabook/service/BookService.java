@@ -46,7 +46,7 @@ public class BookService implements IBookService {
             Author author;
             if (authorId != null) {
                 // Get author to search
-                author = authorRepository.findById(authorId).orElse(null);
+                author = authorRepository.getById(authorId);
                 // If the author not exit, return null
                 if (author == null) {
                     return null;
@@ -123,7 +123,7 @@ public class BookService implements IBookService {
                 && request.getAuthorId() != 0) {
 
             // Get the author to check if exists
-            Author author = authorRepository.findById(request.getAuthorId()).orElse(null);
+            Author author = authorRepository.getById(request.getAuthorId());
             if (author != null) {
                 // Author exists and book can be created
                 Book newBook = Book.builder()
@@ -171,7 +171,7 @@ public class BookService implements IBookService {
                 JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
                 JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(bookRequest)));
                 BookRequest patchedBookRequest = objectMapper.treeToValue(target, BookRequest.class);
-                Author author = authorRepository.findById(patchedBookRequest.getAuthorId()).orElse(null);
+                Author author = authorRepository.getById(patchedBookRequest.getAuthorId());
                 if (author != null) {
                     // Create the book model object
                     Book patchedBook = Book.builder()
@@ -212,7 +212,7 @@ public class BookService implements IBookService {
         if (book != null) {
             if (!Objects.equals(updateRequest.getAuthorId(), book.getAuthor().getId())) {
                 // Check if author exists
-                Author author = authorRepository.findById(updateRequest.getAuthorId()).orElse(null);
+                Author author = authorRepository.getById(updateRequest.getAuthorId());
                 if (author != null) {
                     book.setAuthor(author);
                     book.update(updateRequest);
