@@ -2,6 +2,7 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -153,17 +154,48 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book updateBook(String bookId, String request) {
+    public BookResponse updateBook(String bookId, String request) {
 
         //PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
         Book book = bookRepository.getById(Long.valueOf(bookId));
         if (book != null) {
+            // Transform book model into request format
+            BookRequest bookRequest = BookRequest.builder()
+                    .isbn(book.getIsbn())
+                    .name(book.getName())
+                    .language(book.getLanguage())
+                    .description(book.getDescription())
+                    .category(book.getCategory())
+                    .authorId(book.getAuthor().getId()).build();
             try {
                 JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
-                JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(book)));
-                Book patched = objectMapper.treeToValue(target, Book.class);
-                bookRepository.save(patched);
-                return patched;
+                JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(bookRequest)));
+                BookRequest patchedBookRequest = objectMapper.treeToValue(target, BookRequest.class);
+                Author author = authorRepository.findById(patchedBookRequest.getAuthorId()).orElse(null);
+                if (author != null) {
+                    // Create the book model object
+                    Book patchedBook = Book.builder()
+                            .id(book.getId())
+                            .isbn(patchedBookRequest.getIsbn())
+                            .name(patchedBookRequest.getName())
+                            .language(patchedBookRequest.getLanguage())
+                            .description(patchedBookRequest.getDescription())
+                            .category(patchedBookRequest.getCategory())
+                            .author(author).build();
+                    bookRepository.save(patchedBook);
+                    // Transform updated book to return format
+                    BookResponse updatedBookResponse = BookResponse.builder()
+                            .id(patchedBook.getId())
+                            .isbn(patchedBook.getIsbn())
+                            .name(patchedBook.getName())
+                            .language(patchedBook.getLanguage())
+                            .description(patchedBook.getDescription())
+                            .category(patchedBook.getCategory())
+                            .authorId(patchedBook.getAuthor().getId()).build();
+                    return updatedBookResponse;
+                } else {
+                    return null;
+                }
             } catch (JsonProcessingException | JsonPatchException e) {
                 log.error("Error updating book {}", bookId, e);
                 return null;
@@ -174,12 +206,32 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book updateBook(String bookId, BookRequest updateRequest) {
+    public BookResponse updateBook(String bookId, BookRequest updateRequest) {
         Book book = bookRepository.getById(Long.valueOf(bookId));
+        // Check if author is different and exists
         if (book != null) {
-            book.update(updateRequest);
-            bookRepository.save(book);
-            return book;
+            if (!Objects.equals(updateRequest.getAuthorId(), book.getAuthor().getId())) {
+                // Check if author exists
+                Author author = authorRepository.findById(updateRequest.getAuthorId()).orElse(null);
+                if (author != null) {
+                    book.setAuthor(author);
+                    book.update(updateRequest);
+                    bookRepository.save(book);
+                }
+            } else {
+                book.update(updateRequest);
+                bookRepository.save(book);
+            }
+            // Transform updated book to return format
+            BookResponse updatedBookResponse = BookResponse.builder()
+                    .id(book.getId())
+                    .isbn(book.getIsbn())
+                    .name(book.getName())
+                    .language(book.getLanguage())
+                    .description(book.getDescription())
+                    .category(book.getCategory())
+                    .authorId(book.getAuthor().getId()).build();
+            return updatedBookResponse;
         } else {
             return null;
         }
