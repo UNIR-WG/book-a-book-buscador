@@ -40,7 +40,7 @@ public class Author implements Serializable {
     @Column(name = "biography")
     private String biography;
     @Column(name = "booksWritted")
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Book> booksWritted;
 
     public Author(Author author) {
@@ -53,6 +53,16 @@ public class Author implements Serializable {
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
         this.booksWritted = author.getBooksWritted();
+    }
+
+    public void addBook(Book book) {
+        booksWritted.add(book);
+        book.setAuthor(this);
+    }
+
+    public void removeBook(Book book) {
+        booksWritted.remove(book);
+        book.setAuthor(null);
     }
 
     public void setBooksWritted(List<Book> booksWritted) {

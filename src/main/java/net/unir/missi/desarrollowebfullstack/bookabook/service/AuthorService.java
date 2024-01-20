@@ -58,8 +58,8 @@ public class AuthorService implements IAuthorService{
     {
         try {
             Author authorModel = new Author(author);
-            repository.save(authorModel);
-            return author;
+
+            return new AuthorRequest(repository.save(authorModel));
         }catch (Exception e){
             throw new RuntimeException("Database Failed;");
         }

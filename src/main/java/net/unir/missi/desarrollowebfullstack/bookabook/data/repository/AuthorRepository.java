@@ -29,8 +29,8 @@ public class AuthorRepository {
         return authorJpaRepository.findById(id).orElse(null);
     }
 
-    public void save(Author author) {
-        authorJpaRepository.save(author);
+    public Author save(Author author) {
+        return authorJpaRepository.save(author);
     }
 
     public void delete(Author author) {
@@ -50,7 +50,7 @@ public class AuthorRepository {
             }
         if(birthDate!=null)
             if (StringUtils.isNotBlank(String.valueOf(birthDate))) {
-                spec.add(new SearchStatement("birthDate", String.valueOf(birthDate), SearchOperation.MATCH));
+                spec.add(new SearchStatement("birthDate", birthDate, SearchOperation.MATCH));
             }
         if(nationality!=null)
             if (StringUtils.isNotBlank(nationality)) {

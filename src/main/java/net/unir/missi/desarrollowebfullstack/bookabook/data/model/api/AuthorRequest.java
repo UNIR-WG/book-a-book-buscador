@@ -1,5 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,6 +18,7 @@ import java.util.List;
 @Getter
 @ToString
 public class AuthorRequest {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -24,6 +27,7 @@ public class AuthorRequest {
     private String email;
     private String webSite;
     private String biography;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Long> booksWrittedId;
 
 

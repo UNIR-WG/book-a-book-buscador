@@ -124,8 +124,10 @@ public class BookService implements IBookService {
 
             // Get the author to check if exists
             Author author = authorRepository.getById(request.getAuthorId());
+
             if (author != null) {
                 // Author exists and book can be created
+
                 Book newBook = Book.builder()
                         .isbn(request.getIsbn())
                         .name(request.getName())
@@ -133,6 +135,7 @@ public class BookService implements IBookService {
                         .description(request.getDescription())
                         .category(request.getCategory())
                         .author(author).build();
+
                 Book createdBook = bookRepository.save(newBook);
                 // Return the created book in response format
                 BookResponse createdBookResponse = BookResponse.builder()
