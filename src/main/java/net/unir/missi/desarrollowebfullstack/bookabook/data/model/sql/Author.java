@@ -6,6 +6,8 @@ import lombok.*;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +30,7 @@ public class Author implements Serializable {
     @Column(name = "lastName")
     private String lastName;
     @Column(name = "birthDate")
-    private Date birthDate;
+    private LocalDate birthDate;
     @Column(name = "nationality")
     private String nationality;
     @Column(name = "email")
@@ -85,7 +87,7 @@ public class Author implements Serializable {
         return this.lastName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return this.birthDate;
     }
 
@@ -117,7 +119,7 @@ public class Author implements Serializable {
         this.lastName = lastName;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

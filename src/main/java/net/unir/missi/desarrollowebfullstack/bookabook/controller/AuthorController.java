@@ -1,24 +1,29 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.controller;
 
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import io.swagger.v3.oas.annotations.Parameter;
+import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -28,11 +33,32 @@ public class AuthorController {
 
     private final AuthorService service;
 
+    @Autowired
+    private final ObjectMapper objectMapper;
+
     @GetMapping("/authors")
-    public ResponseEntity<List<AuthorRequest>> getAllAuthors()
+    public ResponseEntity<List<AuthorRequest>> getAuthors(
+            @Parameter(name = "firstName", example = "Juan")
+            @RequestParam(required = false) String firstName,
+            @Parameter(name = "lastName", example = "Garcia")
+            @RequestParam(required = false) String lastName,
+            @Parameter(name = "birthDate", example = "2024-01-20")
+            @RequestParam(required = false) LocalDate birthDate,
+            @Parameter(name = "nationality", example = "spanish")
+            @RequestParam(required = false) String nationality,
+            @Parameter(name = "email", example = "example@example.com")
+            @RequestParam(required = false) String email,
+            @Parameter(name = "webSite", example = "bokkabook.com")
+            @RequestParam(required = false) String webSite,
+            @Parameter(name = "biography")
+            @RequestParam(required = false) String biography,
+            @Parameter(name = "booksWritted")
+            @RequestParam(required = false) List<Long> booksWritted)
     {
+
         try {
-            return ResponseEntity.ok(service.getAllAuthors());
+            List<AuthorRequest> request = service.getAllAuthors(firstName,lastName,birthDate,nationality,email,webSite,biography,booksWritted);
+            return ResponseEntity.ok(Objects.requireNonNullElse(request, Collections.emptyList()));
         } catch (Exception e) {
             log.error("Error getting authors list {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -44,6 +70,8 @@ public class AuthorController {
     {
         try {
             AuthorRequest author = service.getAuthorById(idAuthor);
+            log.error("Error AUTHOR {}", author);
+
             if(author!=null)
                 return ResponseEntity.ok(author);
             else
@@ -89,11 +117,16 @@ public class AuthorController {
     }
 
     @PatchMapping("/authors/{idAuthor}")
-    public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
+    public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody String authorData) {
         try {
+            JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(authorData));
+            JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(authorData)));
+            AuthorRequest authorPatched = objectMapper.treeToValue(target, AuthorRequest.class);
+
             AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
+
             if(tempAuthor!=null){
-                return ResponseEntity.ok(service.modifyAuthorData(tempAuthor, authorData));
+                return ResponseEntity.ok(service.modifyAuthorData(tempAuthor, authorPatched));
             } else
                 return ResponseEntity.notFound().build();
 

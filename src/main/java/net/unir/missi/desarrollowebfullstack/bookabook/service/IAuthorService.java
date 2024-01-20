@@ -2,11 +2,14 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface IAuthorService {
 
-    List<AuthorRequest> getAllAuthors() throws RuntimeException;
+    List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, List<Long> booksWritted) throws RuntimeException;
 
     AuthorRequest createAuthor(AuthorRequest author) throws RuntimeException;
 
