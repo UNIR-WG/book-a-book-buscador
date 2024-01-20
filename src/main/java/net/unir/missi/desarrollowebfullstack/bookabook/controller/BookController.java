@@ -156,9 +156,9 @@ public class BookController {
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Producto inválido o datos incorrectos introducidos.")
-    public ResponseEntity<Book> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
+    public ResponseEntity<BookResponse> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
 
-        Book patched = service.updateBook(bookId, patchBody);
+        BookResponse patched = service.updateBook(bookId, patchBody);
         if (patched != null) {
             return ResponseEntity.ok(patched);
         } else {
@@ -182,11 +182,11 @@ public class BookController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Producto no encontrado.")
-    public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookRequest body) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookRequest body) {
 
-        Book updated = service.updateBook(bookId, body);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
+        BookResponse updatedBook = service.updateBook(bookId, body);
+        if (updatedBook != null) {
+            return ResponseEntity.ok(updatedBook);
         } else {
             return ResponseEntity.notFound().build();
         }

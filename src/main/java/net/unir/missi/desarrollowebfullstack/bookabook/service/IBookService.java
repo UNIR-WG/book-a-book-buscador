@@ -18,8 +18,8 @@ public interface IBookService {
 
     BookResponse createBook(BookRequest request);
 
-    Book updateBook(String bookId, String updateRequest);
+    BookResponse updateBook(String bookId, String updateRequest);
 
-    Book updateBook(String bookId, BookRequest updateRequest);
+    BookResponse updateBook(String bookId, BookRequest updateRequest);
 }
 
