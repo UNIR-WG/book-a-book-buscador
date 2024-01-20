@@ -1,6 +1,5 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +33,6 @@ public class Book {
     @Column(name = "category")
     private String category;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     @JoinColumn(name = "author_id")
     private Author author;
 
