@@ -37,10 +37,8 @@ public class AuthorRepository {
         authorJpaRepository.delete(author);
     }
 
-    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, List<Book> booksWritted) {
+    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritted) {
         SearchCriteria<Author> spec = new SearchCriteria<>();
-
-
 
         if(firstName!=null)
             if (StringUtils.isNotBlank(firstName)) {
@@ -71,8 +69,8 @@ public class AuthorRepository {
                 spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
             }
         if(booksWritted!=null)
-            if (!booksWritted.isEmpty()) {
-                spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.MATCH));
+            if (StringUtils.isNotBlank(biography)) {
+                spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.EQUAL));
             }
 
 

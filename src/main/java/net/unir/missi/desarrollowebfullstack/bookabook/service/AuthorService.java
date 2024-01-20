@@ -26,10 +26,10 @@ public class AuthorService implements IAuthorService{
     private final BookRepository bookRepository;
 
     @Override
-    public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, List<Long> booksWritted) throws RuntimeException
+    public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookWritted) throws RuntimeException
     {
         try {
-            log.error("ERROR ENTRA "+firstName+"  "+lastName+"  "+birthDate+"  "+nationality+"  "+email+"  "+webSite+"  "+biography+"  "+booksWritted);
+            log.error("ERROR ENTRA "+firstName+"  "+lastName+"  "+birthDate+"  "+nationality+"  "+email+"  "+webSite+"  "+biography+"  "+bookWritted);
 
             if (firstName!=null
                     || lastName !=null
@@ -38,14 +38,10 @@ public class AuthorService implements IAuthorService{
                     || email!=null
                     || webSite!=null
                     || biography!=null
-                    || booksWritted!=null){
+                    || bookWritted!=null){
 
-                List<Book> bookList = new ArrayList<>();
-                if(booksWritted!=null && !booksWritted.isEmpty()){
-                    for (Long book : booksWritted) {
-                        bookList.add(bookRepository.getById(book));
-                    }
-                }
+                Book bookList = bookRepository.getById(bookWritted);
+
 
                 return repository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
             }else {

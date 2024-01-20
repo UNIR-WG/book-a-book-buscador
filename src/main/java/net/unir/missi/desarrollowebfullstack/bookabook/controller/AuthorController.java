@@ -53,7 +53,7 @@ public class AuthorController {
             @Parameter(name = "biography")
             @RequestParam(required = false) String biography,
             @Parameter(name = "booksWritted")
-            @RequestParam(required = false) List<Long> booksWritted)
+            @RequestParam(required = false) Long booksWritted)
     {
 
         try {

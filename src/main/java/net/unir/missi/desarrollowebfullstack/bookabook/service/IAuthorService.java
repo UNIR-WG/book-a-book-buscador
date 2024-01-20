@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IAuthorService {
 
-    List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, List<Long> booksWritted) throws RuntimeException;
+    List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long booksWritted) throws RuntimeException;
 
     AuthorRequest createAuthor(AuthorRequest author) throws RuntimeException;
 
