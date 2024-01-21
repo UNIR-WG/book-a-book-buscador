@@ -49,11 +49,11 @@ public class AuthorController {
             @Parameter(name = "biography")
             @RequestParam(required = false) String biography,
             @Parameter(name = "bookId")
-            @RequestParam(required = false) Long booksWritted)
+            @RequestParam(required = false) Long bookId)
     {
 
         try {
-            List<AuthorRequest> request = service.getAllAuthors(firstName,lastName,birthDate,nationality,email,webSite,biography,booksWritted);
+            List<AuthorRequest> request = service.getAllAuthors(firstName,lastName,birthDate,nationality,email,webSite,biography,bookId);
             return ResponseEntity.ok(Objects.requireNonNullElse(request, Collections.emptyList()));
         } catch (Exception e) {
             log.error("Error getting authors list {}", e.getMessage(), e);

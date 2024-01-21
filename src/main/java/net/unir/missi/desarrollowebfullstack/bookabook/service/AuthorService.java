@@ -26,7 +26,7 @@ public class AuthorService implements IAuthorService{
     private BookRepository bookRepository;
 
     @Override
-    public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookWritted) throws RuntimeException
+    public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookId) throws RuntimeException
     {
         try {
 
@@ -37,16 +37,19 @@ public class AuthorService implements IAuthorService{
                     || email!=null
                     || webSite!=null
                     || biography!=null
-                    || bookWritted!=null){
+                    || bookId!=null){
 
 
                 Book bookList;
-                if(bookWritted!=null)
-                    bookList = bookRepository.getById(bookWritted);
-                else
+                if(bookId!=null) {
+                    bookList = bookRepository.getById(bookId);
+                    if (bookList == null) {
+                        return null;
+                    }
+                } else
                     bookList = null;
-
                 return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
+
             }else {
                 return authorRepository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
             }
