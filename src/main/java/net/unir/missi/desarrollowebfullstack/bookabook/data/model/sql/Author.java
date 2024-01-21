@@ -43,7 +43,7 @@ public class Author {
     private String webSite;
     @Column(name = "biography")
     private String biography;
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Book> booksWritted;
 

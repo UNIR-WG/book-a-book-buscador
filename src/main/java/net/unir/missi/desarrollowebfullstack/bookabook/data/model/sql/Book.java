@@ -1,5 +1,6 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,7 @@ public class Book {
     private String description;
     @Column(name = "category")
     private String category;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id")
     @JsonBackReference
     private Author author;

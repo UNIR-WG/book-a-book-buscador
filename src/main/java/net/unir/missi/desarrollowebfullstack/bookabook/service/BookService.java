@@ -105,6 +105,10 @@ public class BookService implements IBookService {
         Book book = bookRepository.getById(Long.valueOf(bookId));
 
         if (book != null) {
+            // Remove the association with author
+            book.setAuthor(null);
+            bookRepository.save(book);
+            // Delete the book
             bookRepository.delete(book);
             return Boolean.TRUE;
         } else {
