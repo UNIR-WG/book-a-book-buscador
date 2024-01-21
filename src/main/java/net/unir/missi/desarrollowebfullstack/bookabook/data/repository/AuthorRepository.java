@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -68,14 +69,25 @@ public class AuthorRepository {
             if (StringUtils.isNotBlank(biography)) {
                 spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
             }
-        if(booksWritted!=null)
-            {
-                spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.EQUAL));
-            }
+//        if(booksWritted!=null)
+//            {
+//                spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.EQUAL));
+//            }
 
 
+        List<Author> listAuthor = authorJpaRepository.findAll(spec);
+        List<Author> filteredAuthors = new ArrayList<>();
 
-        return authorJpaRepository.findAll(spec);
+        if (booksWritted != null) {
+            filteredAuthors = listAuthor.stream()
+                    .filter(author -> author.getBooksWritted().stream()
+                            .anyMatch(book -> Objects.equals(booksWritted.getId(), book.getId())))
+                    .collect(Collectors.toList());
+        }else{
+            filteredAuthors = listAuthor;
+        }
+
+        return filteredAuthors;
     }
 
 
