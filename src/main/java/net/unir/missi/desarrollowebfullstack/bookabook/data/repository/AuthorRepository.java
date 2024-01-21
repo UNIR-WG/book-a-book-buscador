@@ -69,7 +69,7 @@ public class AuthorRepository {
                 spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
             }
         if(booksWritted!=null)
-            if (StringUtils.isNotBlank(biography)) {
+            {
                 spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.EQUAL));
             }
 
