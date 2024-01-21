@@ -31,15 +31,20 @@ public class AuthorService implements IAuthorService{
         try {
 
             if (firstName!=null
-                    || lastName !=null
-                    || birthDate !=null
+                    || lastName!=null
+                    || birthDate!=null
                     || nationality!=null
                     || email!=null
                     || webSite!=null
                     || biography!=null
                     || bookWritted!=null){
 
-                Book bookList = bookRepository.getById(bookWritted);
+
+                Book bookList;
+                if(bookWritted!=null)
+                    bookList = bookRepository.getById(bookWritted);
+                else
+                    bookList = null;
 
                 return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
             }else {
