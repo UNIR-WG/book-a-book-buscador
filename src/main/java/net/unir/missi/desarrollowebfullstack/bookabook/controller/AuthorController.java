@@ -48,7 +48,7 @@ public class AuthorController {
             @RequestParam(required = false) String webSite,
             @Parameter(name = "biography")
             @RequestParam(required = false) String biography,
-            @Parameter(name = "booksWritted")
+            @Parameter(name = "bookId")
             @RequestParam(required = false) Long booksWritted)
     {
 
