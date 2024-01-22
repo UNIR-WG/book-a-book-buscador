@@ -78,8 +78,16 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			<version>4.1.0</version>
 		</dependency>
-	</dependencies>
 
+		<!-- To use Feign client, a Rest Template equivalent with Eureka discovery awareness -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.4.7.RELEASE</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<finalName>book-a-book-buscador</finalName>  <!-- Final name for the WAR artifact -->
