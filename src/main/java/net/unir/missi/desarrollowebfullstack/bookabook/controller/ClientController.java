@@ -111,7 +111,7 @@ public class ClientController {
         return Boolean.TRUE.equals(clientDeleted) ? ResponseEntity.ok(deleteResponse) : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/client/{clientId}")
+    @PutMapping("/clients/{clientId}")
     @Operation(
             operationId = "Modificar totalmente un cliente.",
             description = "Operación de escritura.",

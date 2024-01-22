@@ -3,12 +3,14 @@ version: "2.1"
 services:
   book-a-book-buscador:
     image: aleixmt/book-a-book-buscador:latest
+    pull_policy: always
     ports:
       - "0.0.0.0:8082:8081"
     #restart: unless-stopped
 
   book-a-book-eureka:
     image: aleixmt/book-a-book-eureka:latest
+    pull_policy: always
     ports:
       - "0.0.0.0:8762:8761"
     restart: unless-stopped
