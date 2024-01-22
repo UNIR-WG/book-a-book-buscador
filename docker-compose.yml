@@ -21,7 +21,7 @@ services:
       - TZ=Etc/UTC
       - POSTGRES_PASSWORD=chemistry
       - POSTGRES_USER=aleixmt
-      - POSTGRES_DB=bookabook
+      - POSTGRES_DB=book-a-book-buscador
     ports:
       - "0.0.0.0:5432:5432"
     restart: unless-stopped
