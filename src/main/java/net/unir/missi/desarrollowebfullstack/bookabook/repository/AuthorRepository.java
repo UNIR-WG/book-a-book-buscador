@@ -75,7 +75,7 @@ public class AuthorRepository {
 
 
         List<Author> listAuthor = authorJpaRepository.findAll(spec);
-        List<Author> filteredAuthors = new ArrayList<>();
+        List<Author> filteredAuthors;
 
         if (booksWritted != null) {
             filteredAuthors = listAuthor.stream()
