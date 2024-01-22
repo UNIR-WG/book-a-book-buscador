@@ -6,15 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Client;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.ClientRepository;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

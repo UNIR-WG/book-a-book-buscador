@@ -1,15 +1,12 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter

@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

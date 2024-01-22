@@ -2,10 +2,9 @@ package net.unir.missi.desarrollowebfullstack.bookabook.controller;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import io.swagger.v3.oas.annotations.Parameter;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

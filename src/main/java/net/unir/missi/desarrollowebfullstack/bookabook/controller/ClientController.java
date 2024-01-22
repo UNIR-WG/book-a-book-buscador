@@ -8,11 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.DeleteResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.DeleteResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.IClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController

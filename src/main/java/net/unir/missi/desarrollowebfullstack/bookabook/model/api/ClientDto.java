@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.model.api;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.api;
 
 import lombok.*;
 

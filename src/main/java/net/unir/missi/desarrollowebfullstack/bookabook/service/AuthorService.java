@@ -1,18 +1,15 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.AuthorRepository;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.BookRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

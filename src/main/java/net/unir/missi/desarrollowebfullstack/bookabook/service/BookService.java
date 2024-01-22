@@ -9,18 +9,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.BookRepository;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.repository.AuthorRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
 
 @Service
 @Slf4j

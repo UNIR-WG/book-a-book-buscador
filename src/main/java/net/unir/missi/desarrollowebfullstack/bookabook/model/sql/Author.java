@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -8,10 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

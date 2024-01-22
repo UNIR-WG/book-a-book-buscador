@@ -1,10 +1,8 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface IAuthorService {

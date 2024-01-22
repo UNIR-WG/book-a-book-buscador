@@ -1,7 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 
 import java.util.List;
 

@@ -1,13 +1,10 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
+package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 

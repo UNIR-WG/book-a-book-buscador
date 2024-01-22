@@ -2,9 +2,8 @@ package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
 import java.util.List;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
 
 
 public interface IBookService {

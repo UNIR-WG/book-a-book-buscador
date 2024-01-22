@@ -1,10 +1,10 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
+package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchStatement;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;

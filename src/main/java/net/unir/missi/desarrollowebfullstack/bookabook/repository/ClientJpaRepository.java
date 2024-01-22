@@ -1,9 +1,9 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
+package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Client;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchStatement;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

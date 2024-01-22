@@ -1,16 +1,15 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.repository;
+package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.utils.SearchStatement;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
+import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;

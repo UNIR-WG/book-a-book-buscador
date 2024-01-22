@@ -1,6 +1,5 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.api.BookRequest;
-import net.unir.missi.desarrollowebfullstack.bookabook.data.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "books")
 @Getter

@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.data.utils;
+package net.unir.missi.desarrollowebfullstack.bookabook.config.search;
 
 import lombok.AllArgsConstructor;
 
