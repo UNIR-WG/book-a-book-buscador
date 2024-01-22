@@ -1,4 +1,4 @@
-CREATE TABLE books (
+/* TABLE books (
                        id BIGSERIAL PRIMARY KEY,
                        isbn VARCHAR(20) NOT NULL,
                        name VARCHAR(100) NOT NULL,
@@ -25,4 +25,4 @@ CREATE TABLE clients (
                          email VARCHAR(100),
                          address VARCHAR(255),
                          phoneNumber VARCHAR(20)
-);
+);*/
