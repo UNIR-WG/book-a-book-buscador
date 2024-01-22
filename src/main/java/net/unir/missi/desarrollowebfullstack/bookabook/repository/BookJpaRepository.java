@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 interface BookJpaRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
     List<Book> findByIsbn(String ISBN);

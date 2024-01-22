@@ -6,9 +6,11 @@ import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOpera
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 interface ClientJpaRepository extends JpaRepository<Client, Long>, JpaSpecificationExecutor<Client> {
 
     default List<Client> findByFirstName(String firstName){
