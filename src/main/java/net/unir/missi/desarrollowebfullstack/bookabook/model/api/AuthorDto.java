@@ -26,7 +26,7 @@ public class AuthorDto {
     private String webSite;
     private String biography;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<Long> booksWrittedId;
+    private List<Long> booksWrittenId;
 
     public AuthorDto(Author authorModel) {
         this.id = authorModel.getId();
@@ -38,12 +38,12 @@ public class AuthorDto {
         this.webSite = authorModel.getWebSite();
         this.biography = authorModel.getBiography();
         List<Long> tempBook = new ArrayList<>();
-        if (authorModel.getBooksWritted() != null || !authorModel.getBooksWritted().isEmpty() ){
-            for (Book book : authorModel.getBooksWritted())
+        if (authorModel.getBooksWritten() != null || !authorModel.getBooksWritten().isEmpty() ){
+            for (Book book : authorModel.getBooksWritten())
                 tempBook.add(book.getId());
         }
 
-        this.booksWrittedId = tempBook;
+        this.booksWrittenId = tempBook;
 
     }
 

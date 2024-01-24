@@ -109,7 +109,7 @@ public class AuthorService implements IAuthorService{
     public AuthorDto modifyAllAuthorData(AuthorDto prev, AuthorDto authorData) throws RuntimeException
     {
             Author authorToChange = authorRepository.getById(prev.getId());
-            //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
+
             authorToChange.setFirstName(authorData.getFirstName());
 
             authorToChange.setLastName(authorData.getLastName());

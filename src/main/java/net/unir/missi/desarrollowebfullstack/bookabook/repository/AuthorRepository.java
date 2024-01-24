@@ -8,6 +8,7 @@ import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -37,9 +38,14 @@ public class AuthorRepository {
         authorJpaRepository.delete(author);
     }
 
+    /*private void addSearchStatement(SearchCriteria<Client> spec, String key, String value, SearchOperation operation) {
+        if (StringUtils.isNotBlank(key)) {
+            spec.add(new SearchStatement(key, value, operation));
+        }
+    }*/
+
     public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritted) {
         SearchCriteria<Author> spec = new SearchCriteria<>();
-
 
         if (StringUtils.isNotBlank(firstName)) {
             spec.add(new SearchStatement("firstName", firstName, SearchOperation.MATCH));
@@ -76,7 +82,7 @@ public class AuthorRepository {
 
         if (booksWritted != null) {
             filteredAuthors = listAuthor.stream()
-                    .filter(author -> author.getBooksWritted().stream()
+                    .filter(author -> author.getBooksWritten().stream()
                             .anyMatch(book -> Objects.equals(booksWritted.getId(), book.getId())))
                     .collect(Collectors.toList());
         }else{

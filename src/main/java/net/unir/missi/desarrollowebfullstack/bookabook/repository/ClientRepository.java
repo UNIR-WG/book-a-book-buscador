@@ -37,11 +37,11 @@ public class ClientRepository {
     public List<Client> filterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
         SearchCriteria<Client> spec = new SearchCriteria<>();
 
-        this.addSearchStatement(spec, firstName, "firstName", SearchOperation.MATCH);
-        this.addSearchStatement(spec, lastName, "lastName", SearchOperation.MATCH);
-        this.addSearchStatement(spec, address, "address", SearchOperation.MATCH);
-        this.addSearchStatement(spec, phoneNumber, "phoneNumber", SearchOperation.MATCH);
-        this.addSearchStatement(spec, email, "email", SearchOperation.EQUAL);
+        this.addSearchStatement(spec,"firstName", firstName, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "lastName", lastName, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "address", address, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "phoneNumber", phoneNumber, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "email", email, SearchOperation.EQUAL);
 
         return repository.findAll(spec);
     }

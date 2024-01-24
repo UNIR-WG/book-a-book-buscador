@@ -39,17 +39,17 @@ public class BookController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     public ResponseEntity<List<BookResponse>> getBooks(
             @RequestHeader Map<String, String> headers,
-            @Parameter(name = "isbn", description = "Código ISBN del libro", example = "", required = false)
+            @Parameter(name = "isbn", description = "Código ISBN del libro")  //Regex ?
             @RequestParam(required = false) String isbn,
-            @Parameter(name = "name", description = "Nombre del libro", example = "", required = false)
+            @Parameter(name = "name", description = "Nombre del libro")
             @RequestParam(required = false) String name,
-            @Parameter(name = "language", description = "Idioma del libro", example = "ES", required = false)
+            @Parameter(name = "language", description = "Idioma del libro (ES, EN)")  //Enum ?
             @RequestParam(required = false) String language,
-            @Parameter(name = "descripton", description = "Descripción del libro. No tiene que ser exacto", example = "", required = false)
+            @Parameter(name = "descripton", description = "Descripción del libro")
             @RequestParam(required = false) String description,
-            @Parameter(name = "category", description = "Categoría del libro", example = "Ficción", required = false)
+            @Parameter(name = "category", description = "Categoría del libro")  //Enum ?
             @RequestParam(required = false) String category,
-            @Parameter(name = "authorId", description = "Identificador del autor", example = "1", required = false)
+            @Parameter(name = "authorId", description = "Identificador del autor")
             @RequestParam(required = false) Long authorId) {
 
         log.info("headers: {}", headers);
@@ -72,7 +72,7 @@ public class BookController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "No se ha encontrado el libro con el identificador indicado.")
     public ResponseEntity<BookResponse> getBook(@PathVariable String bookId) {
 
@@ -94,10 +94,10 @@ public class BookController {
             summary = "Se elimina un libro a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = DeleteResponse.class)))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "No se ha encontrado el libro con el identificador indicado.")
     public ResponseEntity<DeleteResponse> deleteBook(@PathVariable String bookId) {
 
@@ -126,7 +126,7 @@ public class BookController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     @ApiResponse(
             responseCode = "400",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Datos incorrectos introducidos.")
     public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
 
@@ -153,7 +153,7 @@ public class BookController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     @ApiResponse(
             responseCode = "400",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Producto inválido o datos incorrectos introducidos.")
     public ResponseEntity<BookResponse> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
 
@@ -179,7 +179,7 @@ public class BookController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Producto no encontrado.")
     public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookRequest body) {
 

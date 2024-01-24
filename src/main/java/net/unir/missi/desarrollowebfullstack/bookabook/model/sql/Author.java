@@ -45,7 +45,7 @@ public class Author {
     private String biography;
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Book> booksWritted;
+    private List<Book> booksWritten;
 
     public Author(Author author) {
         this.id = author.getId();
@@ -56,7 +56,7 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
-        this.booksWritted = author.getBooksWritted();
+        this.booksWritten = author.getBooksWritten();
     }
 
 
@@ -69,12 +69,12 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
-        this.booksWritted = new ArrayList<>();
+        this.booksWritten = new ArrayList<>();
 
     }
 
-    public List<Book> getBooksWritted() {
-        return booksWritted;
+    public List<Book> getBooksWritten() {
+        return booksWritten;
     }
 
     public Long getId() {
@@ -141,7 +141,7 @@ public class Author {
         this.biography = biography;
     }
 
-    public void setBooksWritted(List<Book> booksWritted) {
-        this.booksWritted = booksWritted;
+    public void setBooksWritten(List<Book> booksWritten) {
+        this.booksWritten = booksWritten;
     }
 }

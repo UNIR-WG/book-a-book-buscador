@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
 import org.springframework.http.HttpStatus;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
@@ -117,7 +116,6 @@ public class AuthorController {
     public ResponseEntity<AuthorDto> modifyAllAuthorData(@PathVariable String idAuthor, @RequestBody AuthorDto authorData) {
 
             AuthorDto tempAuthor = service.getAuthorById(idAuthor);
-            //Si el autor del id que recibimos es nulo, no hacemos la modificacion
             if(tempAuthor!=null){
                     return ResponseEntity.ok(service.modifyAllAuthorData(tempAuthor, authorData));
             } else
