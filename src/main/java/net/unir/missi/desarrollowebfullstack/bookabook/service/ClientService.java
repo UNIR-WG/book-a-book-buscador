@@ -26,38 +26,8 @@ public class ClientService implements IClientService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<Client> getAllClients(){
-        return clientRepository.getAllClients();
-    }
-
-    @Override
     public List<Client> getFilterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
         return clientRepository.filterClients(firstName, lastName, address, phoneNumber, email);
-    }
-
-    @Override
-    public List<Client> getClientByFirstName(String firstName) {
-        return clientRepository.filterClientByFirstName(firstName);
-    }
-
-    @Override
-    public List<Client> getClientByLastName(String lastName) {
-        return clientRepository.filterClientByLastName(lastName);
-    }
-
-    @Override
-    public List<Client> getClientByAddress(String address) {
-        return clientRepository.filterClientByAddress(address);
-    }
-
-    @Override
-    public List<Client> getClientByPhoneNumber(String phoneNumber) {
-        return clientRepository.filterClientByPhoneNumber(phoneNumber);
-    }
-
-    @Override
-    public List<Client> getClientByEmail(String email) {
-        return clientRepository.filterClientByEmail(email);
     }
 
     @Override
