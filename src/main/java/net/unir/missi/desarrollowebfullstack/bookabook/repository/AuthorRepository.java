@@ -8,7 +8,6 @@ import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -38,22 +37,24 @@ public class AuthorRepository {
         authorJpaRepository.delete(author);
     }
 
-    /*private void addSearchStatement(SearchCriteria<Client> spec, String key, String value, SearchOperation operation) {
+    private void addSearchStatement(SearchCriteria<Author> spec, String key, String value, SearchOperation operation) {
         if (StringUtils.isNotBlank(key)) {
             spec.add(new SearchStatement(key, value, operation));
         }
-    }*/
+    }
 
-    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritted) {
+    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritten) {
+
         SearchCriteria<Author> spec = new SearchCriteria<>();
+        List<Author> listAuthor = authorJpaRepository.findAll(spec);
+        List<Author> filteredAuthors;
 
-        if (StringUtils.isNotBlank(firstName)) {
-            spec.add(new SearchStatement("firstName", firstName, SearchOperation.MATCH));
-        }
-
-        if (StringUtils.isNotBlank(lastName)) {
-            spec.add(new SearchStatement("lastName", lastName, SearchOperation.MATCH));
-        }
+        this.addSearchStatement(spec, "firstName", firstName, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "lastName", lastName, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "nationality", nationality, SearchOperation.EQUAL);
+        this.addSearchStatement(spec, "email", email, SearchOperation.EQUAL);
+        this.addSearchStatement(spec, "webSite", webSite, SearchOperation.MATCH);
+        this.addSearchStatement(spec, "biography", biography, SearchOperation.MATCH);
 
         if(birthDate!=null) {
             if (StringUtils.isNotBlank(String.valueOf(birthDate))) {
@@ -61,29 +62,10 @@ public class AuthorRepository {
             }
         }
 
-        if (StringUtils.isNotBlank(nationality)) {
-            spec.add(new SearchStatement("nationality", nationality, SearchOperation.EQUAL));
-        }
-
-        if (StringUtils.isNotBlank(email)) {
-            spec.add(new SearchStatement("email", email, SearchOperation.EQUAL));
-        }
-
-        if (StringUtils.isNotBlank(webSite)) {
-            spec.add(new SearchStatement("webSite", webSite, SearchOperation.MATCH));
-        }
-
-        if (StringUtils.isNotBlank(biography)) {
-            spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
-        }
-
-        List<Author> listAuthor = authorJpaRepository.findAll(spec);
-        List<Author> filteredAuthors;
-
-        if (booksWritted != null) {
+        if (booksWritten != null) {
             filteredAuthors = listAuthor.stream()
                     .filter(author -> author.getBooksWritten().stream()
-                            .anyMatch(book -> Objects.equals(booksWritted.getId(), book.getId())))
+                            .anyMatch(book -> Objects.equals(booksWritten.getId(), book.getId())))
                     .collect(Collectors.toList());
         }else{
             filteredAuthors = listAuthor;

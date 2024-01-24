@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IAuthorService {
 
-    List<AuthorDto> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long booksWritted) throws RuntimeException;
+    List<AuthorDto> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long booksWritten) throws RuntimeException;
 
     AuthorDto createAuthor(AuthorDto author) throws RuntimeException;
 
