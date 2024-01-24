@@ -1,6 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
@@ -12,13 +13,10 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class ClientRepository {
 
     private final ClientJpaRepository repository;
-
-    public List<Client> getAllClients() {
-        return repository.findAll();
-    }
 
     public Client getClientById(Long id) {
         return repository.findById(id).orElse(null);
@@ -32,50 +30,22 @@ public class ClientRepository {
         repository.delete(client);
     }
 
+    private void addSearchStatement(SearchCriteria<Client> spec, String key, String value, SearchOperation operation) {
+        if (StringUtils.isNotBlank(key)) {
+            spec.add(new SearchStatement(key, value, operation));
+        }
+    }
+
     public List<Client> filterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
         SearchCriteria<Client> spec = new SearchCriteria<>();
 
-        if (StringUtils.isNotBlank(firstName)) {
-            spec.add(new SearchStatement("firstName", firstName, SearchOperation.EQUAL));
-        }
-
-        if (StringUtils.isNotBlank(lastName)) {
-            spec.add(new SearchStatement("lastName", lastName, SearchOperation.EQUAL));
-        }
-
-        if (StringUtils.isNotBlank(address)) {
-            spec.add(new SearchStatement("address", address, SearchOperation.MATCH));
-        }
-
-        if (StringUtils.isNotBlank(phoneNumber)) {
-            spec.add(new SearchStatement("phoneNumber", phoneNumber, SearchOperation.MATCH));
-        }
-
-        if (StringUtils.isNotBlank(email)) {
-            spec.add(new SearchStatement("email", email, SearchOperation.MATCH));
-        }
+        this.addSearchStatement(spec, firstName, "firstName", SearchOperation.MATCH);
+        this.addSearchStatement(spec, lastName, "lastName", SearchOperation.MATCH);
+        this.addSearchStatement(spec, address, "address", SearchOperation.MATCH);
+        this.addSearchStatement(spec, phoneNumber, "phoneNumber", SearchOperation.MATCH);
+        this.addSearchStatement(spec, email, "email", SearchOperation.EQUAL);
 
         return repository.findAll(spec);
-    }
-
-    public List<Client> filterClientByFirstName (String firstName){
-        return repository.findByFirstName(firstName);
-    }
-
-    public List<Client> filterClientByLastName (String lastName){
-        return repository.findByLastName(lastName);
-    }
-
-    public List<Client> filterClientByAddress (String address){
-        return repository.findByAddress(address);
-    }
-
-    public List<Client> filterClientByPhoneNumber (String phoneNumber){
-        return repository.findByPhoneNumber(phoneNumber);
-    }
-
-    public List<Client> filterClientByEmail (String email){
-        return repository.findByEmail(email);
     }
 
 }
