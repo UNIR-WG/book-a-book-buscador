@@ -1,7 +1,14 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.controller;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
@@ -24,14 +31,21 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Authors Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre autores alojados en una base de datos.")
 public class AuthorController {
 
     private final AuthorService service;
 
-    @Autowired
     private final ObjectMapper objectMapper;
 
     @GetMapping("/authors")
+    @Operation(
+            operationId = "Obtener autores",
+            description = "Operacion de lectura y filtrado",
+            summary = "Se devuelve una lista de todos los autores almacenados en la base de datos.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<List<AuthorRequest>> getAuthors(
             @Parameter(name = "firstName", example = "Juan")
             @RequestParam(required = false) String firstName,
@@ -61,6 +75,13 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{idAuthor}")
+    @Operation(
+            operationId = "Obtener autores por su id",
+            description = "Operacion de lectura y filtrado",
+            summary = "Se devuelve un autor almacenados en la base de datos con un id seleccionado.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<AuthorRequest> getAuthorById(@PathVariable String idAuthor)
     {
         try {
@@ -79,6 +100,13 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
+    @Operation(
+            operationId = "Insercción de un autor.",
+            description = "Operacion de escritura.",
+            summary = "Se devuelve el autor insertado.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<AuthorRequest> addAuthor(@RequestBody AuthorRequest authorRequested)
     {
         try {
@@ -96,6 +124,13 @@ public class AuthorController {
     }
 
     @PutMapping("/authors/{idAuthor}")
+    @Operation(
+            operationId = "Modificación total de un autor.",
+            description = "Operacion de escritura.",
+            summary = "Se devuelve el autor modificado.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<AuthorRequest> modifyAllAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
         try {
             AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
@@ -112,6 +147,13 @@ public class AuthorController {
     }
 
     @PatchMapping("/authors/{idAuthor}")
+    @Operation(
+            operationId = "Modificación parcial de un autor.",
+            description = "Operacion de escritura.",
+            summary = "Se devuelve el autor modificado.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody String authorData) {
         try {
             JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(authorData));
@@ -132,6 +174,13 @@ public class AuthorController {
     }
 
     @DeleteMapping("/authors/{idAuthor}")
+    @Operation(
+            operationId = "Borrado de un autor.",
+            description = "Operacion de escritura.",
+            summary = "Se devuelve el autor eliminado.")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
     public ResponseEntity<AuthorRequest> deleteAuthor(@PathVariable String idAuthor) {
         try {
             AuthorRequest prev = service.getAuthorById(idAuthor);

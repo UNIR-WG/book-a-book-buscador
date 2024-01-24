@@ -40,39 +40,36 @@ public class AuthorRepository {
     public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritted) {
         SearchCriteria<Author> spec = new SearchCriteria<>();
 
-        if(firstName!=null)
-            if (StringUtils.isNotBlank(firstName)) {
-                spec.add(new SearchStatement("firstName", firstName, SearchOperation.EQUAL));
-            }
-        if(lastName!=null)
-            if (StringUtils.isNotBlank(lastName)) {
-                spec.add(new SearchStatement("lastName", lastName, SearchOperation.EQUAL));
-            }
-        if(birthDate!=null)
-            if (StringUtils.isNotBlank(String.valueOf(birthDate))) {
-                spec.add(new SearchStatement("birthDate", birthDate, SearchOperation.MATCH));
-            }
-        if(nationality!=null)
-            if (StringUtils.isNotBlank(nationality)) {
-                spec.add(new SearchStatement("nationality", nationality, SearchOperation.EQUAL));
-            }
-        if(email!=null)
-            if (StringUtils.isNotBlank(email)) {
-                spec.add(new SearchStatement("email", email, SearchOperation.EQUAL));
-            }
-        if(webSite!=null)
-            if (StringUtils.isNotBlank(webSite)) {
-                spec.add(new SearchStatement("webSite", webSite, SearchOperation.MATCH));
-            }
-        if(biography!=null)
-            if (StringUtils.isNotBlank(biography)) {
-                spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
-            }
-//        if(booksWritted!=null)
-//            {
-//                spec.add(new SearchStatement("booksWritted", booksWritted, SearchOperation.EQUAL));
-//            }
 
+        if (StringUtils.isNotBlank(firstName)) {
+            spec.add(new SearchStatement("firstName", firstName, SearchOperation.MATCH));
+        }
+
+        if (StringUtils.isNotBlank(lastName)) {
+            spec.add(new SearchStatement("lastName", lastName, SearchOperation.MATCH));
+        }
+
+        if(birthDate!=null) {
+            if (StringUtils.isNotBlank(String.valueOf(birthDate))) {
+                spec.add(new SearchStatement("birthDate", birthDate, SearchOperation.EQUAL));
+            }
+        }
+
+        if (StringUtils.isNotBlank(nationality)) {
+            spec.add(new SearchStatement("nationality", nationality, SearchOperation.EQUAL));
+        }
+
+        if (StringUtils.isNotBlank(email)) {
+            spec.add(new SearchStatement("email", email, SearchOperation.EQUAL));
+        }
+
+        if (StringUtils.isNotBlank(webSite)) {
+            spec.add(new SearchStatement("webSite", webSite, SearchOperation.MATCH));
+        }
+
+        if (StringUtils.isNotBlank(biography)) {
+            spec.add(new SearchStatement("biography", biography, SearchOperation.MATCH));
+        }
 
         List<Author> listAuthor = authorJpaRepository.findAll(spec);
         List<Author> filteredAuthors;
