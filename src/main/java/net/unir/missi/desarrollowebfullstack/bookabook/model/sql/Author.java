@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -60,7 +60,7 @@ public class Author {
     }
 
 
-    public Author(AuthorRequest author) {
+    public Author(AuthorDto author) {
         this.id = author.getId();
         this.firstName = author.getFirstName();
         this.lastName = author.getLastName();

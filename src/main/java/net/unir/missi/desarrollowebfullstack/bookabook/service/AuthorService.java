@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
@@ -23,9 +23,8 @@ public class AuthorService implements IAuthorService{
     private BookRepository bookRepository;
 
     @Override
-    public List<AuthorRequest> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookId) throws RuntimeException
+    public List<AuthorDto> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookId) throws RuntimeException
     {
-        try {
 
             if (firstName!=null
                     || lastName!=null
@@ -45,130 +44,100 @@ public class AuthorService implements IAuthorService{
                     }
                 } else
                     bookList = null;
-                return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorRequest::new).collect(Collectors.toList());
+                return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorDto::new).collect(Collectors.toList());
 
             }else {
-                return authorRepository.findAll().stream().map(AuthorRequest::new).collect(Collectors.toList());
+                return authorRepository.findAll().stream().map(AuthorDto::new).collect(Collectors.toList());
             }
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;"+e.getMessage(),e);
-        }
     }
 
     @Override
-    public AuthorRequest createAuthor(AuthorRequest author) throws RuntimeException
+    public AuthorDto createAuthor(AuthorDto author) throws RuntimeException
     {
-        try {
             Author authorModel = new Author(author);
 
-            return new AuthorRequest(authorRepository.save(authorModel));
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;");
-        }
+            return new AuthorDto(authorRepository.save(authorModel));
     }
 
     @Override
-    public AuthorRequest getAuthorById(String idAuthor) throws RuntimeException
+    public AuthorDto getAuthorById(String idAuthor) throws RuntimeException
     {
-        try {
-            log.error("ERROR antes de modelo");
+
             Author authorModel = authorRepository.getById(Long.valueOf(idAuthor));
 
             if(authorModel!=null)
-                return new AuthorRequest(authorModel);
+                return new AuthorDto(authorModel);
             else
                 return null;
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;"+e.getMessage());
-        }
+
     }
 
     @Override
-    public AuthorRequest modifyAuthorData(AuthorRequest tempAuthor, AuthorRequest authorData) throws RuntimeException
+    public AuthorDto modifyAuthorData(AuthorDto tempAuthor, AuthorDto authorData) throws RuntimeException
     {
-        try {
+
             Author authorToChange = authorRepository.getById(tempAuthor.getId());
-            if(authorToChange!=null) {
 
-                //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
-                if (authorData.getFirstName() != null)
-                    authorToChange.setFirstName(authorData.getFirstName());
+            if (authorData.getFirstName() != null)
+                authorToChange.setFirstName(authorData.getFirstName());
 
-                if (authorData.getLastName() != null)
-                    authorToChange.setLastName(authorData.getLastName());
+            if (authorData.getLastName() != null)
+                authorToChange.setLastName(authorData.getLastName());
 
-                if (authorData.getBirthDate() != null)
-                    authorToChange.setBirthDate(authorData.getBirthDate());
+            if (authorData.getBirthDate() != null)
+                authorToChange.setBirthDate(authorData.getBirthDate());
 
-                if (authorData.getEmail() != null)
-                    authorToChange.setEmail(authorData.getEmail());
+            if (authorData.getEmail() != null)
+                authorToChange.setEmail(authorData.getEmail());
 
-                if (authorData.getWebSite() != null)
-                    authorToChange.setWebSite(authorData.getWebSite());
+            if (authorData.getWebSite() != null)
+                authorToChange.setWebSite(authorData.getWebSite());
 
-                if (authorData.getNationality() != null)
-                    authorToChange.setNationality(authorData.getNationality());
+            if (authorData.getNationality() != null)
+                authorToChange.setNationality(authorData.getNationality());
 
-                if (authorData.getBiography() != null)
-                    authorToChange.setBiography(authorData.getBiography());
+            if (authorData.getBiography() != null)
+                authorToChange.setBiography(authorData.getBiography());
 
-                authorRepository.save(authorToChange);
+            authorRepository.save(authorToChange);
 
-                return new AuthorRequest(authorToChange);
-            }else
-                throw new RuntimeException("Database Failed;");
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;");
-        }
+            return new AuthorDto(authorToChange);
 
     }
 
     @Override
-    public AuthorRequest modifyAllAuthorData(AuthorRequest prev, AuthorRequest authorData) throws RuntimeException
+    public AuthorDto modifyAllAuthorData(AuthorDto prev, AuthorDto authorData) throws RuntimeException
     {
-        try {
-            Author optionalAuthor = authorRepository.getById(prev.getId());
-            if(optionalAuthor!=null) {
-                Author authorToChange = optionalAuthor;
-                //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
-                    authorToChange.setFirstName(authorData.getFirstName());
+            Author authorToChange = authorRepository.getById(prev.getId());
+            //Si el elemento recibido del autor es nulo, significa que no existe, y por ende no debemos modificarlo
+            authorToChange.setFirstName(authorData.getFirstName());
 
-                    authorToChange.setLastName(authorData.getLastName());
+            authorToChange.setLastName(authorData.getLastName());
 
-                    authorToChange.setBirthDate(authorData.getBirthDate());
+            authorToChange.setBirthDate(authorData.getBirthDate());
 
-                    authorToChange.setEmail(authorData.getEmail());
+            authorToChange.setEmail(authorData.getEmail());
 
-                    authorToChange.setWebSite(authorData.getWebSite());
+            authorToChange.setWebSite(authorData.getWebSite());
 
-                    authorToChange.setNationality(authorData.getNationality());
+            authorToChange.setNationality(authorData.getNationality());
 
-                    authorToChange.setBiography(authorData.getBiography());
+            authorToChange.setBiography(authorData.getBiography());
 
-                authorRepository.save(authorToChange);
+            authorRepository.save(authorToChange);
 
-                return new AuthorRequest(authorToChange);
-            }else
-                throw new RuntimeException("Database Failed;");
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;");
-        }
+            return new AuthorDto(authorToChange);
+
     }
 
     @Override
-    public AuthorRequest deleteAuthor(AuthorRequest prev) throws RuntimeException
+    public AuthorDto deleteAuthor(AuthorDto prev) throws RuntimeException
     {
         Author author = authorRepository.getById(prev.getId());
-        try {
-            if(author!=null) {
-                authorRepository.delete(author);
-                return prev;
-            }else{
-                throw new RuntimeException("Database Failed;");
-            }
-        }catch (Exception e){
-            throw new RuntimeException("Database Failed;");
-        }
+
+        authorRepository.delete(author);
+        return prev;
+
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class AuthorRequest {
+public class AuthorDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String firstName;
@@ -28,8 +28,7 @@ public class AuthorRequest {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Long> booksWrittedId;
 
-
-    public AuthorRequest(Author authorModel) {
+    public AuthorDto(Author authorModel) {
         this.id = authorModel.getId();
         this.firstName = authorModel.getFirstName();
         this.lastName = authorModel.getLastName();

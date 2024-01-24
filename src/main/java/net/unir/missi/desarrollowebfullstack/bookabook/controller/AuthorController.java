@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorRequest;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,19 +43,19 @@ public class AuthorController {
             summary = "Se devuelve una lista de todos los autores almacenados en la base de datos.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<List<AuthorRequest>> getAuthors(
-            @Parameter(name = "firstName", example = "Juan")
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<List<AuthorDto>> getAuthors(
+            @Parameter(name = "firstName")
             @RequestParam(required = false) String firstName,
-            @Parameter(name = "lastName", example = "Garcia")
+            @Parameter(name = "lastName")
             @RequestParam(required = false) String lastName,
-            @Parameter(name = "birthDate", example = "2024-01-20")
+            @Parameter(name = "birthDate", example = "YYYY-MM-DD")
             @RequestParam(required = false) LocalDate birthDate,
-            @Parameter(name = "nationality", example = "spanish")
+            @Parameter(name = "nationality")
             @RequestParam(required = false) String nationality,
-            @Parameter(name = "email", example = "example@example.com")
+            @Parameter(name = "email")
             @RequestParam(required = false) String email,
-            @Parameter(name = "webSite", example = "bokkabook.com")
+            @Parameter(name = "webSite")
             @RequestParam(required = false) String webSite,
             @Parameter(name = "biography")
             @RequestParam(required = false) String biography,
@@ -65,13 +63,8 @@ public class AuthorController {
             @RequestParam(required = false) Long bookId)
     {
 
-        try {
-            List<AuthorRequest> request = service.getAllAuthors(firstName,lastName,birthDate,nationality,email,webSite,biography,bookId);
+            List<AuthorDto> request = service.getAllAuthors(firstName,lastName,birthDate,nationality,email,webSite,biography,bookId);
             return ResponseEntity.ok(Objects.requireNonNullElse(request, Collections.emptyList()));
-        } catch (Exception e) {
-            log.error("Error getting authors list {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @GetMapping("/authors/{idAuthor}")
@@ -81,22 +74,16 @@ public class AuthorController {
             summary = "Se devuelve un autor almacenados en la base de datos con un id seleccionado.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<AuthorRequest> getAuthorById(@PathVariable String idAuthor)
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable String idAuthor)
     {
-        try {
-            AuthorRequest author = service.getAuthorById(idAuthor);
-            log.error("Error AUTHOR {}", author);
 
+            AuthorDto author = service.getAuthorById(idAuthor);
             if(author!=null)
                 return ResponseEntity.ok(author);
             else
                 return ResponseEntity.notFound().build();
 
-        } catch (Exception e) {
-            log.error("Error getting author {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @PostMapping("/authors")
@@ -106,21 +93,17 @@ public class AuthorController {
             summary = "Se devuelve el autor insertado.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<AuthorRequest> addAuthor(@RequestBody AuthorRequest authorRequested)
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<AuthorDto> addAuthor(@RequestBody AuthorDto authorRequested)
     {
-        try {
+
             if(authorRequested!=null) {
-                AuthorRequest newAuthor = service.createAuthor(authorRequested);
+                AuthorDto newAuthor = service.createAuthor(authorRequested);
                 return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
             }
             else
                 return ResponseEntity.badRequest().build();
 
-        } catch (Exception e) {
-            log.error("Error adding author {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @PutMapping("/authors/{idAuthor}")
@@ -130,20 +113,16 @@ public class AuthorController {
             summary = "Se devuelve el autor modificado.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<AuthorRequest> modifyAllAuthorData(@PathVariable String idAuthor, @RequestBody AuthorRequest authorData) {
-        try {
-            AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<AuthorDto> modifyAllAuthorData(@PathVariable String idAuthor, @RequestBody AuthorDto authorData) {
+
+            AuthorDto tempAuthor = service.getAuthorById(idAuthor);
             //Si el autor del id que recibimos es nulo, no hacemos la modificacion
             if(tempAuthor!=null){
                     return ResponseEntity.ok(service.modifyAllAuthorData(tempAuthor, authorData));
             } else
                 return ResponseEntity.notFound().build();
 
-        } catch (Exception e) {
-            log.error("Error modifying author {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @PatchMapping("/authors/{idAuthor}")
@@ -153,14 +132,14 @@ public class AuthorController {
             summary = "Se devuelve el autor modificado.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<AuthorRequest> modifyAuthorData(@PathVariable String idAuthor, @RequestBody String authorData) {
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<AuthorDto> modifyAuthorData(@PathVariable String idAuthor, @RequestBody String authorData) {
         try {
             JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(authorData));
             JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(authorData)));
-            AuthorRequest authorPatched = objectMapper.treeToValue(target, AuthorRequest.class);
+            AuthorDto authorPatched = objectMapper.treeToValue(target, AuthorDto.class);
 
-            AuthorRequest tempAuthor = service.getAuthorById(idAuthor);
+            AuthorDto tempAuthor = service.getAuthorById(idAuthor);
 
             if(tempAuthor!=null){
                 return ResponseEntity.ok(service.modifyAuthorData(tempAuthor, authorPatched));
@@ -180,18 +159,14 @@ public class AuthorController {
             summary = "Se devuelve el autor eliminado.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Author.class)))
-    public ResponseEntity<AuthorRequest> deleteAuthor(@PathVariable String idAuthor) {
-        try {
-            AuthorRequest prev = service.getAuthorById(idAuthor);
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class)))
+    public ResponseEntity<AuthorDto> deleteAuthor(@PathVariable String idAuthor) {
+
+            AuthorDto prev = service.getAuthorById(idAuthor);
             if(prev!=null){
                 return ResponseEntity.ok(service.deleteAuthor(prev));
             } else
                 return ResponseEntity.notFound().build();
 
-        } catch (Exception e) {
-            log.error("Error deleting author {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
     }
 }
