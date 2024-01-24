@@ -1,7 +1,6 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@Slf4j
 public class ClientRepository {
 
     private final ClientJpaRepository repository;
