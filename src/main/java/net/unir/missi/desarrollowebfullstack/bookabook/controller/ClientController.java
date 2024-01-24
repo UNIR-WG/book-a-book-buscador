@@ -15,10 +15,7 @@ import net.unir.missi.desarrollowebfullstack.bookabook.service.IClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,20 +33,24 @@ public class ClientController {
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
-    public ResponseEntity<List<Client>> getFilterClients(
-            @Parameter(name = "firstName", description = "Nombre", example = "", required = false)
+    @ApiResponse(
+            responseCode = "400",
+            content = @Content(mediaType = "application/json", schema = @Schema()),
+            description = "Datos de cliente introducidos incorrectos.")
+    public ResponseEntity<List<Client>> getClients(
+            @Parameter(name = "firstName", description = "Nombre")
             @RequestParam(required = false) String firstName,
-            @Parameter(name = "lastName", description = "Apellido", example = "", required = false)
+            @Parameter(name = "lastName", description = "Apellido")
             @RequestParam(required = false) String lastName,
-            @Parameter(name = "address", description = "Dirección", example = "", required = false)
+            @Parameter(name = "address", description = "Dirección")
             @RequestParam(required = false) String address,
-            @Parameter(name = "phoneNumber", description = "Teléfono", example = "", required = false)
+            @Parameter(name = "phoneNumber", description = "Teléfono")
             @RequestParam(required = false) String phoneNumber,
-            @Parameter(name = "email", description = "Email", example = "", required = false)
+            @Parameter(name = "email", description = "Email")
             @RequestParam(required = false) String email) {
 
         List<Client> clients = clientService.getFilterClients(firstName, lastName, address, phoneNumber, email);
-        return ResponseEntity.ok(Objects.requireNonNullElse(clients, Collections.emptyList()));
+        return clients != null ? ResponseEntity.ok(clients) : ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/clients/{clientId}")
@@ -62,7 +63,7 @@ public class ClientController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "No se ha encontrado el cliente con el identificador indicado.")
     public ResponseEntity<Client> getClient(@PathVariable String clientId) {
         Client client = clientService.getClient(clientId);
@@ -83,9 +84,9 @@ public class ClientController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
     @ApiResponse(
             responseCode = "400",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Datos introducidos incorrectos.")
-    public ResponseEntity<Client> addBook(@RequestBody ClientDto requestClient) {
+    public ResponseEntity<Client> addClient(@RequestBody ClientDto requestClient) {
         Client clientAdded = clientService.addClient(requestClient);
         return clientAdded != null ? ResponseEntity.status(HttpStatus.CREATED).body(clientAdded) : ResponseEntity.badRequest().build();
     }
@@ -97,14 +98,14 @@ public class ClientController {
             summary = "Se elimina un cliente a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema()))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "No se ha encontrado el cliente con el identificador indicado.")
     public ResponseEntity<DeleteResponse> deleteClient(@PathVariable String clientId) {
         Boolean clientDeleted = clientService.deleteClient(clientId);
-        DeleteResponse deleteResponse = DeleteResponse.builder().message("Book deleted").build();
+        DeleteResponse deleteResponse = DeleteResponse.builder().message("Client deleted").build();
         return Boolean.TRUE.equals(clientDeleted) ? ResponseEntity.ok(deleteResponse) : ResponseEntity.notFound().build();
     }
 
@@ -122,7 +123,7 @@ public class ClientController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
     @ApiResponse(
             responseCode = "404",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Cliente no encontrado.")
     public ResponseEntity<Client> updateClient(@PathVariable String clientId, @RequestBody ClientDto client) {
         Client updatedClient = clientService.updateClient(clientId, client);
@@ -142,12 +143,12 @@ public class ClientController {
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
     @ApiResponse(
-            responseCode = "400",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "Datos de cliente introducidos incorrectos.")
+            responseCode = "404",
+            content = @Content(mediaType = "application/json", schema = @Schema()),
+            description = "Cliente no encontrado.")
     public ResponseEntity<Client> updateClientAttribute(@PathVariable String clientId, @RequestBody String requestClientAttribute) {
         Client clientModified = clientService.updateClientAttribute(clientId, requestClientAttribute);
-        return clientModified != null ? ResponseEntity.ok(clientModified) : ResponseEntity.badRequest().build();
+        return clientModified != null ? ResponseEntity.ok(clientModified) : ResponseEntity.notFound().build();
     }
 
 }
