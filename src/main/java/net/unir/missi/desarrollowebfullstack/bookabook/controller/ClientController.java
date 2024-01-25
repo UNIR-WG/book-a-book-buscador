@@ -50,7 +50,7 @@ public class ClientController {
             @RequestParam(required = false) String email) {
 
         List<Client> clients = clientService.getFilterClients(firstName, lastName, address, phoneNumber, email);
-        return clients != null ? ResponseEntity.ok(clients) : ResponseEntity.badRequest().build();
+        return clients != null ? ResponseEntity.ok(clients) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/clients/{clientId}")

@@ -27,7 +27,17 @@ public class ClientService implements IClientService {
 
     @Override
     public List<Client> getFilterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
-        return clientRepository.filterClients(firstName, lastName, address, phoneNumber, email);
+
+        if (firstName!=null
+                || lastName!=null
+                || address!=null
+                || phoneNumber!=null
+                || email!=null) {
+
+            return clientRepository.filterClients(firstName, lastName, address, phoneNumber, email);
+        }else{
+            return clientRepository.getAllClients();
+        }
     }
 
     @Override

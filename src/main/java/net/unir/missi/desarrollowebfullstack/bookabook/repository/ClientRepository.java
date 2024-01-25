@@ -20,6 +20,10 @@ public class ClientRepository {
         return repository.findById(id).orElse(null);
     }
 
+    public List<Client> getAllClients() {
+        return repository.findAll();
+    }
+
     public Client addClient(Client client) {
         return repository.save(client);
     }
