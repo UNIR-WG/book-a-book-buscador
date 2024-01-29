@@ -178,30 +178,45 @@ public class BookService implements IBookService {
                 JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
                 JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(bookRequest)));
                 BookRequest patchedBookRequest = objectMapper.treeToValue(target, BookRequest.class);
-                Author author = authorRepository.getById(patchedBookRequest.getAuthorId());
-                if (author != null) {
-                    // Create the book model object
-                    Book patchedBook = Book.builder()
-                            .id(book.getId())
-                            .isbn(patchedBookRequest.getIsbn())
-                            .name(patchedBookRequest.getName())
-                            .language(patchedBookRequest.getLanguage())
-                            .description(patchedBookRequest.getDescription())
-                            .category(patchedBookRequest.getCategory())
-                            .author(author).build();
-                    bookRepository.save(patchedBook);
+                if (!Objects.equals(patchedBookRequest.getAuthorId(),book.getAuthor().getId())) {
+                    Author author = authorRepository.getById(patchedBookRequest.getAuthorId());
+                    if (author != null) {
+                        // Create the book model object
+                        Book patchedBook = Book.builder()
+                                .id(book.getId())
+                                .isbn(patchedBookRequest.getIsbn())
+                                .name(patchedBookRequest.getName())
+                                .language(patchedBookRequest.getLanguage())
+                                .description(patchedBookRequest.getDescription())
+                                .category(patchedBookRequest.getCategory())
+                                .author(author).build();
+                        bookRepository.save(patchedBook);
+                        // Transform updated book to return format
+                        BookResponse updatedBookResponse = BookResponse.builder()
+                                .id(patchedBook.getId())
+                                .isbn(patchedBook.getIsbn())
+                                .name(patchedBook.getName())
+                                .language(patchedBook.getLanguage())
+                                .description(patchedBook.getDescription())
+                                .category(patchedBook.getCategory())
+                                .authorId(patchedBook.getAuthor().getId()).build();
+                        return updatedBookResponse;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    book.update(patchedBookRequest);
+                    bookRepository.save(book);
                     // Transform updated book to return format
                     BookResponse updatedBookResponse = BookResponse.builder()
-                            .id(patchedBook.getId())
-                            .isbn(patchedBook.getIsbn())
-                            .name(patchedBook.getName())
-                            .language(patchedBook.getLanguage())
-                            .description(patchedBook.getDescription())
-                            .category(patchedBook.getCategory())
-                            .authorId(patchedBook.getAuthor().getId()).build();
+                            .id(book.getId())
+                            .isbn(book.getIsbn())
+                            .name(book.getName())
+                            .language(book.getLanguage())
+                            .description(book.getDescription())
+                            .category(book.getCategory())
+                            .authorId(book.getAuthor().getId()).build();
                     return updatedBookResponse;
-                } else {
-                    return null;
                 }
             } catch (JsonProcessingException | JsonPatchException e) {
                 log.error("Error updating book {}", bookId, e);
@@ -224,6 +239,8 @@ public class BookService implements IBookService {
                     book.setAuthor(author);
                     book.update(updateRequest);
                     bookRepository.save(book);
+                } else {
+                    return null;
                 }
             } else {
                 book.update(updateRequest);
