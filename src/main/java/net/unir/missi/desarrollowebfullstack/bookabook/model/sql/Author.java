@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -16,8 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "authors")
+@Document(indexName = "authors", createIndex = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -28,24 +30,24 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    @Column(name = "firstName")
+    @Field(type = FieldType.Text, name = "firstName")
     private String firstName;
     @NotNull
-    @Column(name = "lastName")
+    @Field(type = FieldType.Text,name = "lastName")
     private String lastName;
-    @Column(name = "birthDate")
+    @Field(type = FieldType.Date,name = "birthDate")
     private LocalDate birthDate;
-    @Column(name = "nationality")
+    @Field(type = FieldType.Keyword,name = "nationality")
     private String nationality;
-    @Column(name = "email")
+    @Field(type = FieldType.Text,name = "email")
     private String email;
-    @Column(name = "webSite")
+    @Field(type = FieldType.Text,name = "webSite")
     private String webSite;
-    @Column(name = "biography")
+    @Field(type = FieldType.Search_As_You_Type, name = "biography")
     private String biography;
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Book> booksWritten;
+//    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
+//    private List<Book> booksWritten;
 
     public Author(Author author) {
         this.id = author.getId();
@@ -56,7 +58,7 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
-        this.booksWritten = author.getBooksWritten();
+//        this.booksWritten = author.getBooksWritten();
     }
 
 
@@ -69,13 +71,13 @@ public class Author {
         this.email = author.getEmail();
         this.webSite = author.getWebSite();
         this.biography = author.getBiography();
-        this.booksWritten = new ArrayList<>();
+//        this.booksWritten = new ArrayList<>();
 
     }
 
-    public List<Book> getBooksWritten() {
-        return booksWritten;
-    }
+//    public List<Book> getBooksWritten() {
+//        return booksWritten;
+//    }
 
     public Long getId() {
         return this.id;
@@ -141,7 +143,7 @@ public class Author {
         this.biography = biography;
     }
 
-    public void setBooksWritten(List<Book> booksWritten) {
-        this.booksWritten = booksWritten;
-    }
+//    public void setBooksWritten(List<Book> booksWritten) {
+//        this.booksWritten = booksWritten;
+//    }
 }
