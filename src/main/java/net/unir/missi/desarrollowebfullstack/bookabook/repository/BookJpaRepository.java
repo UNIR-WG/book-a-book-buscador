@@ -1,6 +1,7 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-interface BookJpaRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
+interface BookJpaRepository extends ElasticsearchRepository<Book, Long> {
 
     List<Book> findByIsbn(String ISBN);
 

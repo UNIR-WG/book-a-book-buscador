@@ -23,7 +23,9 @@ public class AuthorRepository {
 
 
     public List<Author> findAll() {
-        return authorJpaRepository.findAll();
+        List<Author> ret = new LinkedList<>();
+        authorJpaRepository.findAll().forEach(ret::add);
+        return ret;
     }
     public Author getById(Long id) {
         return authorJpaRepository.findById(id).orElse(null);
@@ -46,7 +48,8 @@ public class AuthorRepository {
     public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritten) {
 
         SearchCriteria<Author> spec = new SearchCriteria<>();
-        List<Author> listAuthor = authorJpaRepository.findAll(spec);
+        List<Author> listAuthor = new LinkedList<>();
+        authorJpaRepository.findAll().forEach(listAuthor::add);
         List<Author> filteredAuthors;
 
         this.addSearchStatement(spec, "firstName", firstName, SearchOperation.MATCH);

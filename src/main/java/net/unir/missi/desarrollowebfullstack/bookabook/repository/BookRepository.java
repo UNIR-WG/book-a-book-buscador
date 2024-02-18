@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -18,7 +19,9 @@ public class BookRepository {
     private final BookJpaRepository repository;
 
     public List<Book> getBooks() {
-        return repository.findAll();
+        List<Book> ret = new LinkedList<>();
+        repository.findAll().forEach(ret::add);
+        return ret;
     }
 
     public Book getById(Long id) {
@@ -59,7 +62,10 @@ public class BookRepository {
         if (author != null) {
             spec.add(new SearchStatement("author", author, SearchOperation.EQUAL));
         }
-        return repository.findAll(spec);
+        // TODO broken search in book repo
+        List<Book> ret = new LinkedList<>();
+        repository.findAll().forEach(ret::add);
+        return ret;
     }
 
 }

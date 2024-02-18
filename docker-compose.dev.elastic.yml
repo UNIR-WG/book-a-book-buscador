@@ -1,0 +1,30 @@
+---
+version: "2.1"
+services:
+  book-a-book-eureka:
+    image: aleixmt/book-a-book-eureka:latest
+    ports:
+      - "0.0.0.0:8761:8761"
+    restart: unless-stopped
+
+  postgres_buscador:
+    image: postgres
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - TZ=Etc/UTC
+      - POSTGRES_PASSWORD=chemistry
+      - POSTGRES_USER=aleixmt
+      - POSTGRES_DB=book-a-book-buscador
+    ports:
+      - "0.0.0.0:5432:5432"
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:7.6.2
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "0.0.0.0:9200:9200"
+    restart: unless-stopped
+
