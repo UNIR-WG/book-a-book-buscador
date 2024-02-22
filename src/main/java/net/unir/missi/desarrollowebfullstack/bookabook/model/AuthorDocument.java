@@ -50,6 +50,6 @@ public class AuthorDocument {
     )
     private String biography;
 
+    @Field
     private List<BookDocument> booksWritten;
-
 }
