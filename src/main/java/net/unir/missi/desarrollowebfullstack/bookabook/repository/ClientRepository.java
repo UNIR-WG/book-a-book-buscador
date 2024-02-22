@@ -1,27 +1,15 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.ClientDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.ClientDocument;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Component
 public class ClientRepository {
 
     private final ClientElasticRepository repository;
@@ -48,20 +36,29 @@ public class ClientRepository {
         List<ClientDocument> listClientDocument = new LinkedList<>();
         repository.findAll().forEach(listClientDocument::add);
 
-        SearchCriteria<ClientDocument> spec = new SearchCriteria<>();
-        spec.add(new SearchStatement("firstName", firstName, SearchOperation.MATCH));
-        spec.add(new SearchStatement("lastName", lastName, SearchOperation.MATCH));
-        spec.add(new SearchStatement("address", address, SearchOperation.EQUAL));
-        spec.add(new SearchStatement("phoneNumber", phoneNumber, SearchOperation.MATCH));
-        spec.add(new SearchStatement("email", email, SearchOperation.EQUAL));
-
-        spec.
-        List<ClientDocument> filteredAuthorDocuments = listClientDocument.stream()
-                .filter(author -> author.getBooksWritten().stream()
-                        .anyMatch(book -> Objects.equals(booksWritten.getId(), book.getId())))
+        return listClientDocument.stream()
+                .filter((ClientDocument doc) ->
+                {
+                    if (!doc.getFirstName().equals(firstName)) {
+                        return false;
+                    }
+                    if (!doc.getLastName().equals(lastName)) {
+                        return false;
+                    }
+                    if (!doc.getAddress().equals(address)) {
+                        return false;
+                    }
+                    if (!doc.getPhoneNumber().equals(phoneNumber)) {
+                        return false;
+                    }
+                    if (! doc.getEmail().equals(email))
+                    {
+                        return false;
+                    }
+                    return true;
+                    // TODO filter by booksWritten
+                })
                 .collect(Collectors.toList());
-
-        return filteredAuthorDocuments;
     }
 
 }

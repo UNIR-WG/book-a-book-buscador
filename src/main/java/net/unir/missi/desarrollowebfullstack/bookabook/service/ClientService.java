@@ -6,14 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.ClientDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.api.ClientResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.AuthorAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.ClientAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.memory.AuthorMemoryConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.memory.ClientMemoryConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.ClientDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,10 +29,10 @@ public class ClientService implements IClientService {
     private ClientRepository clientRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ClientMemoryConverter clientMemoryConverter;
 
     @Override
-    public List<ClientDocument> getFilterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
+    public List<Client> getFilterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
 
         if (firstName!=null
                 || lastName!=null
@@ -34,15 +40,21 @@ public class ClientService implements IClientService {
                 || phoneNumber!=null
                 || email!=null) {
 
-            return clientRepository.filterClients(firstName, lastName, address, phoneNumber, email);
+            return clientRepository.filterClients(firstName, lastName, address, phoneNumber, email).stream().map((ClientDocument c) ->
+            {
+                return this.clientMemoryConverter.fromDocument(c);
+            }).collect(Collectors.toList());
         }else{
-            return clientRepository.getAllClients();
+            return clientRepository.getAllClients().stream().map((ClientDocument c) ->
+            {
+                return this.clientMemoryConverter.fromDocument(c);
+            }).collect(Collectors.toList());
         }
     }
 
     @Override
-    public ClientDocument getClient(String clientId) {
-        return clientRepository.getClientById(Long.valueOf(clientId));
+    public Client getClient(String clientId) {
+        return this.clientMemoryConverter.fromDocument(clientRepository.getClientById(Long.valueOf(clientId)));
     }
 
     @Override
@@ -59,23 +71,23 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public ClientDocument addClient(ClientDto requestClient) {
+    public Client addClient(Client requestClient) {
 
-        if (requestClient != null && StringUtils.hasLength(requestClient.getFirstName().trim())
-                && StringUtils.hasLength(requestClient.getLastName().trim())
-                && StringUtils.hasLength(requestClient.getAddress().trim())
-                && StringUtils.hasLength(requestClient.getPhoneNumber().trim())
-                && StringUtils.hasLength(requestClient.getEmail().trim())) {
+        if (requestClient != null && StringUtils.hasLength(requestClient.firstName().trim())
+                && StringUtils.hasLength(requestClient.lastName().trim())
+                && StringUtils.hasLength(requestClient.address().trim())
+                && StringUtils.hasLength(requestClient.phoneNumber().trim())
+                && StringUtils.hasLength(requestClient.email().trim())) {
 
             ClientDocument newClientDocument = ClientDocument.builder()
-                    .firstName(requestClient.getFirstName())
-                    .lastName(requestClient.getLastName())
-                    .address(requestClient.getAddress())
-                    .phoneNumber(requestClient.getPhoneNumber())
-                    .email(requestClient.getEmail())
+                    .firstName(requestClient.firstName())
+                    .lastName(requestClient.lastName())
+                    .address(requestClient.address())
+                    .phoneNumber(requestClient.phoneNumber())
+                    .email(requestClient.email())
                     .build();
 
-            return clientRepository.addClient(newClientDocument);
+            return this.clientMemoryConverter.fromDocument(clientRepository.addClient(newClientDocument));
         }
         else {
             return null;
@@ -84,27 +96,27 @@ public class ClientService implements IClientService {
 
 
     @Override
-    public ClientDocument updateClient(String clientId, ClientDto requestClient) {
-        if (StringUtils.hasLength(requestClient.getFirstName().trim())
-                || StringUtils.hasLength(requestClient.getLastName().trim())
-                || StringUtils.hasLength(requestClient.getAddress().trim())
-                || StringUtils.hasLength(requestClient.getPhoneNumber().trim())
-                || StringUtils.hasLength(requestClient.getEmail().trim())) {
+    public Client updateClient(String clientId, Client requestClient) {
+        if (StringUtils.hasLength(requestClient.firstName().trim())
+                || StringUtils.hasLength(requestClient.lastName().trim())
+                || StringUtils.hasLength(requestClient.address().trim())
+                || StringUtils.hasLength(requestClient.phoneNumber().trim())
+                || StringUtils.hasLength(requestClient.email().trim())) {
 
             // Get the author to check if exists
             ClientDocument clientDocument = clientRepository.getClientById(Long.valueOf(clientId));
 
             if (clientDocument != null) {
                 ClientDocument newClientDocument = ClientDocument.builder()
-                        .id(clientDocument.getId())
-                        .firstName(requestClient.getFirstName())
-                        .lastName(requestClient.getLastName())
-                        .address(requestClient.getAddress())
-                        .phoneNumber(requestClient.getPhoneNumber())
-                        .email(requestClient.getEmail())
+                        .id(requestClient.id())
+                        .firstName(requestClient.firstName())
+                        .lastName(requestClient.lastName())
+                        .address(requestClient.address())
+                        .phoneNumber(requestClient.phoneNumber())
+                        .email(requestClient.email())
                         .build();
 
-                return clientRepository.addClient(newClientDocument);
+                return this.clientMemoryConverter.fromDocument(clientRepository.addClient(newClientDocument));
             } else {
                 return null;
             }
@@ -114,27 +126,32 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public ClientDocument updateClientAttribute(String clientId, String requestClientAttribute) {
+    public Client updateClientAttribute(String clientId, Client requestClientAttribute) {
         ClientDocument clientDocument = clientRepository.getClientById(Long.valueOf(clientId));
         if (clientDocument != null) {
-            ClientDocument clientDocumentSelected = ClientDocument.builder()
-                    .id(clientDocument.getId())
-                    .firstName(clientDocument.getFirstName())
-                    .lastName(clientDocument.getLastName())
-                    .address(clientDocument.getAddress())
-                    .phoneNumber(clientDocument.getPhoneNumber())
-                    .email(clientDocument.getEmail())
-                    .build();
-            try {
-                JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(requestClientAttribute));
-                JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(clientDocumentSelected)));
-                ClientDocument patchedClientDocument = objectMapper.treeToValue(target, ClientDocument.class);
-                clientRepository.addClient(patchedClientDocument);
-                return patchedClientDocument;
-            } catch (JsonProcessingException | JsonPatchException e) {
-                log.error("Error updating client {}", clientId, e);
-                return null;
+            if (requestClientAttribute.firstName() != null)
+            {
+                clientDocument.setFirstName(requestClientAttribute.firstName());
             }
+            if (requestClientAttribute.lastName() != null)
+            {
+                clientDocument.setFirstName(requestClientAttribute.lastName());
+            }
+            if (requestClientAttribute.phoneNumber() != null)
+            {
+                clientDocument.setFirstName(requestClientAttribute.phoneNumber());
+            }
+            if (requestClientAttribute.email() != null)
+            {
+                clientDocument.setFirstName(requestClientAttribute.email());
+            }
+            if (requestClientAttribute.address() != null)
+            {
+                clientDocument.setFirstName(requestClientAttribute.address());
+            }
+
+            clientRepository.addClient(clientDocument);
+            return this.clientMemoryConverter.fromDocument(clientDocument);
         } else {
             return null;
         }

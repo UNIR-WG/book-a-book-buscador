@@ -1,24 +1,23 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import java.util.List;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Book;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
+import java.util.List;
 
 
 public interface IBookService {
 
-    List<BookResponse> getBooks(String isbn, String name, String language, String description,
+    List<Book> getBooks(String isbn, String name, String language, String description,
                         String category, Long authorId);
 
-    BookResponse getBook(String bookId);
+    Book getBook(String bookId);
 
     Boolean removeBook(String bookId);
 
-    BookResponse createBook(BookRequest request);
+    Book createBook(Book request);
 
-    BookResponse updateBook(String bookId, String updateRequest);
+    Book updateBookAttributes(String bookId, Book updateRequest);
 
-    BookResponse updateBook(String bookId, BookRequest updateRequest);
+    Book updateBook(String bookId, Book updateRequest);
 }
 

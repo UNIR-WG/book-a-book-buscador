@@ -1,14 +1,13 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
-import org.springframework.stereotype.Repository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 
 import java.util.List;
 
-interface BookElasticRepository extends ElasticsearchRepository<BookDocument, Long> {
+public interface BookElasticRepository extends ElasticsearchRepository<BookDocument, Long> {
 
     List<BookDocument> findByIsbn(String ISBN);
 
@@ -20,6 +19,6 @@ interface BookElasticRepository extends ElasticsearchRepository<BookDocument, Lo
 
     List<BookDocument> findByCategory(String category);
 
-    List<BookDocument> findByAuthor(AuthorDocument authorDocument);
+    List<BookDocument> findByAuthorDocument(AuthorDocument authorDocument);
 
 }

@@ -1,8 +1,8 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.config.database;
+package net.unir.missi.desarrollowebfullstack.bookabook.config;
 
 import jakarta.validation.constraints.NotNull;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,12 +18,12 @@ import java.util.logging.Logger;
 @Component
 public class DatabaseInitStartup implements ApplicationListener<ApplicationReadyEvent> {
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    //@Autowired
+    //private AuthorRepository authorRepository;
 
     @Override
     public void onApplicationEvent(final @NotNull ApplicationReadyEvent event) {
-        try{
+        /*try{
             if (this.authorRepository.getById(1L) != null)
             {
                 this.initializeDB();
@@ -32,10 +32,10 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
         catch (Exception e)
         {
             Logger.getLogger("DB init is failing with " + Arrays.toString(e.getStackTrace()));
-        }
+        }*/
     }
 
-    private void initializeDB()
+    /*private void initializeDB()
     {
         Logger.getGlobal().info("INITIALIZING DB");
 
@@ -54,5 +54,7 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
 
         Logger.getGlobal().info("END INITIALIZING DB");
     }
+
+     */
 }
 

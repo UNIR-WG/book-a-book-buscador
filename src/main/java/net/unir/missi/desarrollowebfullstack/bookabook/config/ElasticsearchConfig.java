@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.config.database;
+package net.unir.missi.desarrollowebfullstack.bookabook.config;
 
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -24,23 +24,6 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedToLocalhost()
-                .usingSsl(ElasticsearchConfig.buildSSLContext())
-                .withBasicAuth("elatic", "chemistry")
                 .build();
-    }
-
-    /**
-     * Builds a dummy SSL context that trust all peers.
-     *
-     * @return Instance of SSLContext that trusts everyone.
-     */
-    private static SSLContext buildSSLContext()
-    {
-        try {
-            return new SSLContextBuilder().loadTrustMaterial((KeyStore) null, (TrustStrategy) TrustAllStrategy.INSTANCE).build();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

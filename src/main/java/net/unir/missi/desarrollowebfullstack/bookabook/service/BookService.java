@@ -1,26 +1,27 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
-import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
-
 import lombok.extern.slf4j.Slf4j;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.api.BookResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.BookAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.memory.BookMemoryConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,11 +34,11 @@ public class BookService implements IBookService {
     private AuthorRepository authorRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private BookMemoryConverter bookMemoryConverter;
 
     @Override
-    public List<BookResponse> getBooks(String isbn, String name, String language, String description,
-                                       String category, Long authorId) {
+    public List<Book> getBooks(String isbn, String name, String language, String description,
+                               String category, Long authorId) {
 
         List<BookDocument> books;
         if (StringUtils.hasLength(isbn) || StringUtils.hasLength(name) ||
@@ -58,45 +59,18 @@ public class BookService implements IBookService {
         } else {
             books = bookRepository.getBooks();
         }
-
-        // Process retrieved books to return expected response
-        List<BookResponse> booksResponse = new ArrayList<>();
-        if (books != null) {
-            for (BookDocument book : books) {
-                BookResponse bookResponse = BookResponse.builder()
-                        .id(book.getId())
-                        .isbn(book.getIsbn())
-                        .name(book.getName())
-                        .language(book.getLanguage())
-                        .description(book.getDescription())
-                        .category(book.getCategory())
-                        .authorId(book.getAuthorDocument().getId()).build();
-                booksResponse.add(bookResponse);
-            }
-        }
-
-        return booksResponse.isEmpty() ? null : booksResponse;
+        return books.stream().map(
+                (BookDocument b) ->
+                {
+                    return this.bookMemoryConverter.fromDocument(b);
+                }
+        )
+                .collect(Collectors.toList());
     }
 
     @Override
-    public BookResponse getBook(String bookId) {
-
-        // Get the book from database
-        BookDocument book =  bookRepository.getById(Long.valueOf(bookId));
-        // Transform the book model object to response object
-        if (book != null) {
-            BookResponse bookResponse = BookResponse.builder()
-                    .id(book.getId())
-                    .isbn(book.getIsbn())
-                    .name(book.getName())
-                    .language(book.getLanguage())
-                    .description(book.getDescription())
-                    .category(book.getCategory())
-                    .authorId(book.getAuthorDocument().getId()).build();
-            return bookResponse;
-        } else {
-            return null;
-        }
+    public Book getBook(String bookId) {
+        return this.bookMemoryConverter.fromDocument(this.bookRepository.getById(Long.valueOf(bookId)));
     }
 
     @Override
@@ -117,40 +91,32 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public BookResponse createBook(BookRequest request) {
+    public Book createBook(Book request) {
 
-        if (request != null && StringUtils.hasLength(request.getIsbn().trim())
-                && StringUtils.hasLength(request.getName().trim())
-                && StringUtils.hasLength(request.getLanguage().trim())
-                && StringUtils.hasLength(request.getDescription().trim())
-                && StringUtils.hasLength(request.getCategory().trim())
-                && request.getAuthorId() != 0) {
+        if (request != null && StringUtils.hasLength(request.isbn().trim())
+                && StringUtils.hasLength(request.name().trim())
+                && StringUtils.hasLength(request.language().trim())
+                && StringUtils.hasLength(request.description().trim())
+                && StringUtils.hasLength(request.category().trim())
+                && request.authorDocument() != 0) {
 
             // Get the author to check if exists
-            AuthorDocument authorDocument = authorRepository.getById(request.getAuthorId());
+            AuthorDocument authorDocument = authorRepository.getById(request.authorDocument());
 
             if (authorDocument != null) {
                 // Author exists and book can be created
 
                 BookDocument newBook = BookDocument.builder()
-                        .isbn(request.getIsbn())
-                        .name(request.getName())
-                        .language(request.getLanguage())
-                        .description(request.getDescription())
-                        .category(request.getCategory())
+                        .isbn(request.isbn())
+                        .name(request.name())
+                        .language(request.language())
+                        .description(request.description())
+                        .category(request.category())
                         .authorDocument(authorDocument).build();
 
                 BookDocument createdBook = bookRepository.save(newBook);
-                // Return the created book in response format
-                BookResponse createdBookResponse = BookResponse.builder()
-                        .id(createdBook.getId())
-                        .isbn(createdBook.getIsbn())
-                        .name(createdBook.getName())
-                        .language(createdBook.getLanguage())
-                        .description(createdBook.getDescription())
-                        .category(createdBook.getCategory())
-                        .authorId(createdBook.getAuthorDocument().getId()).build();
-                return createdBookResponse;
+
+                return this.bookMemoryConverter.fromDocument(createdBook);
             } else {
                 // Author not exists
                 return null;
@@ -161,104 +127,47 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public BookResponse updateBook(String bookId, String request) {
-
-        //PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
+    public Book updateBookAttributes(String bookId, Book request) {
         BookDocument book = bookRepository.getById(Long.valueOf(bookId));
-        if (book != null) {
-            // Transform book model into request format
-            BookRequest bookRequest = BookRequest.builder()
-                    .isbn(book.getIsbn())
-                    .name(book.getName())
-                    .language(book.getLanguage())
-                    .description(book.getDescription())
-                    .category(book.getCategory())
-                    .authorId(book.getAuthorDocument().getId()).build();
-            try {
-                JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
-                JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(bookRequest)));
-                BookRequest patchedBookRequest = objectMapper.treeToValue(target, BookRequest.class);
-                if (!Objects.equals(patchedBookRequest.getAuthorId(),book.getAuthorDocument().getId())) {
-                    AuthorDocument authorDocument = authorRepository.getById(patchedBookRequest.getAuthorId());
-                    if (authorDocument != null) {
-                        // Create the book model object
-                        BookDocument patchedBook = BookDocument.builder()
-                                .id(book.getId())
-                                .isbn(patchedBookRequest.getIsbn())
-                                .name(patchedBookRequest.getName())
-                                .language(patchedBookRequest.getLanguage())
-                                .description(patchedBookRequest.getDescription())
-                                .category(patchedBookRequest.getCategory())
-                                .authorDocument(authorDocument).build();
-                        bookRepository.save(patchedBook);
-                        // Transform updated book to return format
-                        BookResponse updatedBookResponse = BookResponse.builder()
-                                .id(patchedBook.getId())
-                                .isbn(patchedBook.getIsbn())
-                                .name(patchedBook.getName())
-                                .language(patchedBook.getLanguage())
-                                .description(patchedBook.getDescription())
-                                .category(patchedBook.getCategory())
-                                .authorId(patchedBook.getAuthorDocument().getId()).build();
-                        return updatedBookResponse;
-                    } else {
-                        return null;
-                    }
-                } else {
-                    book.update(patchedBookRequest);
-                    bookRepository.save(book);
-                    // Transform updated book to return format
-                    BookResponse updatedBookResponse = BookResponse.builder()
-                            .id(book.getId())
-                            .isbn(book.getIsbn())
-                            .name(book.getName())
-                            .language(book.getLanguage())
-                            .description(book.getDescription())
-                            .category(book.getCategory())
-                            .authorId(book.getAuthorDocument().getId()).build();
-                    return updatedBookResponse;
-                }
-            } catch (JsonProcessingException | JsonPatchException e) {
-                log.error("Error updating book {}", bookId, e);
-                return null;
-            }
-        } else {
+        if (book == null) {
             return null;
         }
+
+        if (request.name() != null)
+        {
+            book.setName(request.name());
+        }
+        if (request.category() != null)
+        {
+            book.setCategory(request.category());
+        }
+        if (request.description() != null)
+        {
+            book.setDescription(request.description());
+        }
+        if (request.isbn() != null)
+        {
+            book.setIsbn(request.isbn());
+        }
+        if (request.language()!= null)
+        {
+            book.setLanguage(request.language());
+        }
+
+        return this.bookMemoryConverter.fromDocument(bookRepository.save(book));
     }
 
     @Override
-    public BookResponse updateBook(String bookId, BookRequest updateRequest) {
+    public Book updateBook(String bookId, Book updateRequest) {
         BookDocument book = bookRepository.getById(Long.valueOf(bookId));
-        // Check if author is different and exists
-        if (book != null) {
-            if (!Objects.equals(updateRequest.getAuthorId(), book.getAuthorDocument().getId())) {
-                // Check if author exists
-                AuthorDocument authorDocument = authorRepository.getById(updateRequest.getAuthorId());
-                if (authorDocument != null) {
-                    book.setAuthorDocument(authorDocument);
-                    book.update(updateRequest);
-                    bookRepository.save(book);
-                } else {
-                    return null;
-                }
-            } else {
-                book.update(updateRequest);
-                bookRepository.save(book);
-            }
-            // Transform updated book to return format
-            BookResponse updatedBookResponse = BookResponse.builder()
-                    .id(book.getId())
-                    .isbn(book.getIsbn())
-                    .name(book.getName())
-                    .language(book.getLanguage())
-                    .description(book.getDescription())
-                    .category(book.getCategory())
-                    .authorId(book.getAuthorDocument().getId()).build();
-            return updatedBookResponse;
-        } else {
+        // Check if author exists
+        if (book == null) {
             return null;
         }
+
+        BookDocument bookDocument = this.bookMemoryConverter.toDocument(updateRequest);
+        bookDocument.setId(book.getId());
+        return this.bookMemoryConverter.fromDocument(this.bookRepository.save(bookDocument));
     }
 
 }

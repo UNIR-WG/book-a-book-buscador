@@ -5,27 +5,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.api.AuthorResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Author;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.AuthorAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.BookAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.memory.AuthorMemoryConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.memory.BookMemoryConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @Slf4j
 public class AuthorService implements IAuthorService{
     @Autowired
     private AuthorRepository authorRepository;
+
     @Autowired
     private BookRepository bookRepository;
 
-    @Override
-    public List<AuthorDto> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookId) throws RuntimeException
-    {
+    @Autowired
+    private AuthorMemoryConverter authorMemoryConverter;
 
+    @Override
+    public List<Author> getAllAuthors(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Long bookId) throws RuntimeException
+    {
             if (firstName!=null
                     || lastName!=null
                     || birthDate!=null
@@ -35,7 +42,6 @@ public class AuthorService implements IAuthorService{
                     || biography!=null
                     || bookId!=null){
 
-
                 BookDocument bookList;
                 if(bookId!=null) {
                     bookList = bookRepository.getById(bookId);
@@ -44,96 +50,77 @@ public class AuthorService implements IAuthorService{
                     }
                 } else
                     bookList = null;
-                return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(AuthorDto::new).collect(Collectors.toList());
+                return authorRepository.search(firstName,lastName, birthDate,nationality,email,webSite,biography,bookList).stream().map(
+                        (AuthorDocument d) -> {
+                            return this.authorMemoryConverter.fromDocument(d);
+                        })
+                        .collect(Collectors.toList());
 
             }else {
-                return authorRepository.findAll().stream().map(AuthorDto::new).collect(Collectors.toList());
+                return authorRepository.findAll().stream().map( (AuthorDocument d) -> {
+                    return this.authorMemoryConverter.fromDocument(d);
+                }).collect(Collectors.toList());
             }
     }
 
     @Override
-    public AuthorDto createAuthor(AuthorDto author) throws RuntimeException
+    public Author createAuthor(Author author) throws RuntimeException
     {
-            AuthorDocument authorDocumentModel = new AuthorDocument(author);
-
-            return new AuthorDto(authorRepository.save(authorDocumentModel));
+        return this.authorMemoryConverter.fromDocument(this.authorRepository.save(this.authorMemoryConverter.toDocument(author)));
     }
 
     @Override
-    public AuthorDto getAuthorById(String idAuthor) throws RuntimeException
+    public Author getAuthorById(String idAuthor) throws RuntimeException
     {
-
-            AuthorDocument authorDocumentModel = authorRepository.getById(Long.valueOf(idAuthor));
-
-            if(authorDocumentModel !=null)
-                return new AuthorDto(authorDocumentModel);
+            AuthorDocument authorDocumentModel = this.authorRepository.getById(Long.valueOf(idAuthor));
+            if (authorDocumentModel != null)
+                return this.authorMemoryConverter.fromDocument(authorDocumentModel);
             else
                 return null;
-
     }
 
     @Override
-    public AuthorDto modifyAuthorData(AuthorDto tempAuthor, AuthorDto authorData) throws RuntimeException
+    public Author modifyAuthorData(Author tempAuthor, Author authorData) throws RuntimeException
     {
+            AuthorDocument authorDocumentToChange = authorRepository.getById(tempAuthor.id());
 
-            AuthorDocument authorDocumentToChange = authorRepository.getById(tempAuthor.getId());
+            if (authorData.firstName() != null)
+                authorDocumentToChange.setFirstName(authorData.firstName());
+            if (authorData.lastName() != null)
+                authorDocumentToChange.setLastName(authorData.lastName());
+            if (authorData.birthDate() != null)
+                authorDocumentToChange.setBirthDate(authorData.birthDate());
+            if (authorData.email() != null)
+                authorDocumentToChange.setEmail(authorData.email());
+            if (authorData.webSite() != null)
+                authorDocumentToChange.setWebSite(authorData.webSite());
+            if (authorData.nationality() != null)
+                authorDocumentToChange.setNationality(authorData.nationality());
+            if (authorData.biography() != null)
+                authorDocumentToChange.setBiography(authorData.biography());
 
-            if (authorData.getFirstName() != null)
-                authorDocumentToChange.setFirstName(authorData.getFirstName());
-
-            if (authorData.getLastName() != null)
-                authorDocumentToChange.setLastName(authorData.getLastName());
-
-            if (authorData.getBirthDate() != null)
-                authorDocumentToChange.setBirthDate(authorData.getBirthDate());
-
-            if (authorData.getEmail() != null)
-                authorDocumentToChange.setEmail(authorData.getEmail());
-
-            if (authorData.getWebSite() != null)
-                authorDocumentToChange.setWebSite(authorData.getWebSite());
-
-            if (authorData.getNationality() != null)
-                authorDocumentToChange.setNationality(authorData.getNationality());
-
-            if (authorData.getBiography() != null)
-                authorDocumentToChange.setBiography(authorData.getBiography());
-
-            authorRepository.save(authorDocumentToChange);
-
-            return new AuthorDto(authorDocumentToChange);
-
+            return this.authorMemoryConverter.fromDocument(this.authorRepository.save(authorDocumentToChange));
     }
 
     @Override
-    public AuthorDto modifyAllAuthorData(AuthorDto prev, AuthorDto authorData) throws RuntimeException
+    public Author modifyAllAuthorData(Author prev, Author authorData) throws RuntimeException
     {
-            AuthorDocument authorDocumentToChange = authorRepository.getById(prev.getId());
+            AuthorDocument authorDocumentToChange = this.authorRepository.getById(prev.id());
+            authorDocumentToChange.setFirstName(authorData.firstName());
+            authorDocumentToChange.setLastName(authorData.lastName());
+            authorDocumentToChange.setBirthDate(authorData.birthDate());
+            authorDocumentToChange.setEmail(authorData.email());
+            authorDocumentToChange.setWebSite(authorData.webSite());
+            authorDocumentToChange.setNationality(authorData.nationality());
+            authorDocumentToChange.setBiography(authorData.biography());
 
-            authorDocumentToChange.setFirstName(authorData.getFirstName());
-
-            authorDocumentToChange.setLastName(authorData.getLastName());
-
-            authorDocumentToChange.setBirthDate(authorData.getBirthDate());
-
-            authorDocumentToChange.setEmail(authorData.getEmail());
-
-            authorDocumentToChange.setWebSite(authorData.getWebSite());
-
-            authorDocumentToChange.setNationality(authorData.getNationality());
-
-            authorDocumentToChange.setBiography(authorData.getBiography());
-
-            authorRepository.save(authorDocumentToChange);
-
-            return new AuthorDto(authorDocumentToChange);
-
+            return this.authorMemoryConverter.fromDocument(this.authorRepository.save(authorDocumentToChange));
     }
 
     @Override
-    public AuthorDto deleteAuthor(AuthorDto prev) throws RuntimeException
+    public Author deleteAuthor(Author prev) throws RuntimeException
     {
-        AuthorDocument authorDocument = authorRepository.getById(prev.getId());
+        AuthorDocument authorDocument = authorRepository.getById(prev.id());
 
         authorRepository.delete(authorDocument);
         return prev;

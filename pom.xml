@@ -19,10 +19,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,7 +75,7 @@
 		<!-- Eureka Client dependency -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-clientDocument</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			<version>4.1.0</version>
 		</dependency>
 
@@ -88,9 +88,10 @@
 
 		<!-- For the elasticsearch clientDocument -->
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-elasticsearch</artifactId>
-			<!--<version>5.0.6</version>-->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+			<!-- Determine version https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch/versions.html -->
+			<version>3.2.1</version>
 		</dependency>
 
 	</dependencies>

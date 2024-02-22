@@ -7,29 +7,17 @@ services:
       - "0.0.0.0:8761:8761"
     restart: unless-stopped
 
-  postgres_buscador:
-    image: postgres
-    environment:
-      - PUID=1001
-      - PGID=1001
-      - TZ=Etc/UTC
-      - POSTGRES_PASSWORD=chemistry
-      - POSTGRES_USER=aleixmt
-      - POSTGRES_DB=book-a-book-buscador
-    ports:
-      - "0.0.0.0:5432:5432"
-    restart: unless-stopped
-
   elasticsearch:
-    image: elasticsearch:7.6.2
+    image: elasticsearch:8.11.4
     environment:
       - discovery.type=single-node
       - node.name=elasticnode
       - cluster.name=elastic
-      - bootstrap.memory_loc7k=true
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=chemistry
-      - xpack.security.enabled=true
+      - bootstrap.memory_lock=true
+#      - ELASTIC_USERNAME=elastic
+#      - ELASTIC_PASSWORD=chemistry
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "0.0.0.0:9200:9200"
