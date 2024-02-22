@@ -24,6 +24,13 @@ services:
     image: elasticsearch:7.6.2
     environment:
       - discovery.type=single-node
+      - node.name=elasticnode
+      - cluster.name=elastic
+      - bootstrap.memory_loc7k=true
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=chemistry
+      - xpack.security.enabled=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "0.0.0.0:9200:9200"
     restart: unless-stopped
