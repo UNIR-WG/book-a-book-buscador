@@ -1,5 +1,8 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,18 +11,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.DeleteResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.api.BookResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.api.DeleteResponse;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.converter.api.BookAPIConverter;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.IBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +32,12 @@ import java.util.Map;
 @Tag(name = "Books Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre libros alojados en una base de datos.")
 public class BookController {
 
+    @Autowired
+    private BookAPIConverter converter;
+
     private final IBookService service;
+
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/books")
     @Operation(
@@ -36,7 +46,7 @@ public class BookController {
             summary = "Se devuelve una lista de todos los libros almacenados en la base de datos.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     public ResponseEntity<List<BookResponse>> getBooks(
             @RequestHeader Map<String, String> headers,
             @Parameter(name = "isbn", description = "Código ISBN del libro")  //Regex ?
@@ -53,13 +63,17 @@ public class BookController {
             @RequestParam(required = false) Long authorId) {
 
         log.info("headers: {}", headers);
-        List<BookResponse> books = service.getBooks(isbn, name, language, description, category, authorId);
-
-        if (books != null) {
-            return ResponseEntity.ok(books);
-        } else {
-            return ResponseEntity.ok(Collections.emptyList());
+        List<Book> books = service.getBooks(isbn, name, language, description, category, authorId);
+        if (books == null)
+        {
+            return ResponseEntity.ok(null);
         }
+        return ResponseEntity.ok(books.stream().map(
+                (Book a) ->
+                {
+                    return this.converter.fromMemory(a);
+                }
+        ).collect(Collectors.toList()));
     }
 
     @GetMapping("/books/{bookId}")
@@ -69,7 +83,7 @@ public class BookController {
             summary = "Se devuelve un libro a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
@@ -77,10 +91,10 @@ public class BookController {
     public ResponseEntity<BookResponse> getBook(@PathVariable String bookId) {
 
         log.info("Request received for book {}", bookId);
-        BookResponse book = service.getBook(bookId);
+        Book book = service.getBook(bookId);
 
         if (book != null) {
-            return ResponseEntity.ok(book);
+            return ResponseEntity.ok(this.converter.fromMemory(book));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -120,20 +134,20 @@ public class BookController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del libro a crear.",
                     required = true,
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookRequest.class))))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookResponse.class))))
     @ApiResponse(
             responseCode = "201",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Datos incorrectos introducidos.")
-    public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
+    public ResponseEntity<BookResponse> addBook(@RequestBody BookResponse request) {
 
-        BookResponse createdBook = service.createBook(request);
+        Book createdBook = service.createBook(this.converter.toMemory(request));
 
         if (createdBook != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.converter.fromMemory(createdBook));
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -150,18 +164,29 @@ public class BookController {
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = String.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Producto inválido o datos incorrectos introducidos.")
     public ResponseEntity<BookResponse> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
+        try
+        {
+            JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(patchBody));
+            JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(patchBody)));
+            BookResponse bookPatched = objectMapper.treeToValue(target, BookResponse.class);
 
-        BookResponse patched = service.updateBook(bookId, patchBody);
-        if (patched != null) {
-            return ResponseEntity.ok(patched);
-        } else {
-            return ResponseEntity.badRequest().build();
+            Book tempBook = service.getBook(bookId);
+
+            if (tempBook != null) {
+                return ResponseEntity.ok(this.converter.fromMemory(this.service.updateBookAttributes(bookId, this.converter.toMemory(bookPatched))));
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        catch (Exception e) {
+            log.error("Error modifying author {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -173,17 +198,16 @@ public class BookController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del libro a actualizar.",
                     required = true,
-                    content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = BookRequest.class))))
+                    content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = BookResponse.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Producto no encontrado.")
-    public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookRequest body) {
-
-        BookResponse updatedBook = service.updateBook(bookId, body);
+    public ResponseEntity<BookResponse> updateBook(@PathVariable String bookId, @RequestBody BookResponse body) {
+        BookResponse updatedBook = this.converter.fromMemory(service.updateBook(bookId, this.converter.toMemory(body)));
         if (updatedBook != null) {
             return ResponseEntity.ok(updatedBook);
         } else {

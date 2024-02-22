@@ -1,65 +1,66 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Repository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
+import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Repository
 @RequiredArgsConstructor
+@Component
 public class BookRepository {
 
-    private final BookJpaRepository repository;
+    private final BookElasticRepository repository;
 
-    public List<Book> getBooks() {
-        return repository.findAll();
+    public List<BookDocument> getBooks() {
+        List<BookDocument> ret = new LinkedList<>();
+        repository.findAll().forEach(ret::add);
+        return ret;
     }
 
-    public Book getById(Long id) {
+    public BookDocument getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public Book save(Book book) {
+    public BookDocument save(BookDocument book) {
         return repository.save(book);
     }
 
-    public void delete(Book book) {
+    public void delete(BookDocument book) {
         repository.delete(book);
     }
 
-    public List<Book> search(String isbn, String name, String language,
-                             String description, String category, Author author) {
-        SearchCriteria<Book> spec = new SearchCriteria<>();
-        if (StringUtils.isNotBlank(isbn)) {
-            spec.add(new SearchStatement("isbn", isbn, SearchOperation.MATCH));
-        }
+    public List<BookDocument> search(String isbn, String name, String language,
+                                     String description, String category, AuthorDocument authorDocument) {
 
-        if (StringUtils.isNotBlank(name)) {
-            spec.add(new SearchStatement("name", name, SearchOperation.MATCH));
-        }
+        List<BookDocument> listBookDocument = new LinkedList<>();
+        repository.findAll().forEach(listBookDocument::add);
 
-        if (StringUtils.isNotBlank(language)) {
-            spec.add(new SearchStatement("language", language, SearchOperation.EQUAL));
-        }
-
-        if (StringUtils.isNotBlank(description)) {
-            spec.add(new SearchStatement("description", description, SearchOperation.MATCH));
-        }
-
-        if (StringUtils.isNotBlank(category)) {
-            spec.add(new SearchStatement("category", category, SearchOperation.EQUAL));
-        }
-
-        if (author != null) {
-            spec.add(new SearchStatement("author", author, SearchOperation.EQUAL));
-        }
-        return repository.findAll(spec);
+        return listBookDocument.stream()
+                .filter((BookDocument doc) ->
+                {
+                    if (!doc.getIsbn().equals(isbn)) {
+                        return false;
+                    }
+                    if (!doc.getName().equals(name)) {
+                        return false;
+                    }
+                    if (!doc.getLanguage().equals(language)) {
+                        return false;
+                    }
+                    if (!doc.getDescription().equals(description)) {
+                        return false;
+                    }
+                    if (!doc.getCategory().equals(category)) {
+                        return false;
+                    }
+                    // TODO filter by authorDocument
+                    return true;
+                })
+                .collect(Collectors.toList());
     }
 
 }

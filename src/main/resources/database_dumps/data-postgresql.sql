@@ -1,7 +1,7 @@
 INSERT INTO authors (id, first_name, last_name, birth_date, nationality, email, web_site, biography)
 VALUES
     (1, 'John', 'Doe', '1980-05-15', 'American', 'john.doe@example.com', 'http://www.johndoe.com', 'Author biography.'),
-    (2, 'Jane', 'Smith', '1975-08-22', 'British', 'jane.smith@example.com', 'http://www.janesmith.com', 'Another author biography.'),
+    (2, 'Jane', 'Smith', '1975-08-22', 'British', 'jane.smith@example.com', 'http://www.janesmith.com', 'Another authorDocument biography.'),
     (3, 'Carlos', 'García', '1990-11-10', 'Spanish', 'carlos.garcia@example.com', 'http://www.carlosgarcia.com', 'Biografía del autor.'),
     (4, 'Laura', 'López', '1988-03-25', 'Mexican', 'laura.lopez@example.com', 'http://www.lauralopez.com', 'Biografía de Laura.');
 
@@ -27,7 +27,7 @@ VALUES
     (18, '978-7-89-012345-6', 'Artificial Neural Networks', 'English', 'Understanding artificial neural networks.', 'Science', 2),
     (19, '978-8-90-123456-7', 'Seguridad Informática Avanzada', 'Spanish', 'Principios avanzados de seguridad informática.', 'Tecnología', 3);
 
-INSERT INTO clients (id, first_name, last_name, email, address, phone_number)
+INSERT INTO clientDocuments (id, first_name, last_name, email, address, phone_number)
 VALUES
     (1, 'Juan', 'Pérez', 'juan.perez@example.com', 'Calle 123, Ciudad', '123-456-7890'),
     (2, 'María', 'Gómez', 'maria.gomez@example.com', 'Avenida Principal, Pueblo', '987-654-3210'),

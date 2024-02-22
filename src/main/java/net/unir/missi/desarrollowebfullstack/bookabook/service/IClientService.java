@@ -1,7 +1,6 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.service;
 
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.DTO.memory.Client;
 
 import java.util.List;
 
@@ -12,13 +11,13 @@ public interface IClientService {
 
     Client getClient(String clientId);
 
-    Client addClient(ClientDto requestClient);
+    Client addClient(Client requestClient);
 
     Boolean deleteClient(String clientId);
 
-    Client updateClient(String clientId, ClientDto requestClient);
+    Client updateClient(String clientId, Client requestClient);
 
-    Client updateClientAttribute(String clientId, String requestClientAttribute);
+    Client updateClientAttribute(String clientId, Client requestClientAttribute);
 
 }
 

@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.model.api;
+package net.unir.missi.desarrollowebfullstack.bookabook.DTO.api;
 
 import lombok.*;
 
@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class BookRequest {
-
+public class BookResponse {
+    private Long id;
     private String isbn;
     private String name;
     private String language;

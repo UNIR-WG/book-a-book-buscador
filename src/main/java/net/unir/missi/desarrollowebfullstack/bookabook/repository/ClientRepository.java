@@ -1,53 +1,64 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
 import lombok.RequiredArgsConstructor;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Repository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.ClientDocument;
+import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Repository
 @RequiredArgsConstructor
+@Component
 public class ClientRepository {
 
-    private final ClientJpaRepository repository;
+    private final ClientElasticRepository repository;
 
-    public Client getClientById(Long id) {
+    public ClientDocument getClientById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Client> getAllClients() {
-        return repository.findAll();
+    public List<ClientDocument> getAllClients() {
+        List<ClientDocument> ret = new LinkedList<>();
+        this.repository.findAll().forEach(ret::add);
+        return ret;
     }
 
-    public Client addClient(Client client) {
-        return repository.save(client);
+    public ClientDocument addClient(ClientDocument clientDocument) {
+        return repository.save(clientDocument);
     }
 
-    public void deleteClient(Client client) {
-        repository.delete(client);
+    public void deleteClient(ClientDocument clientDocument) {
+        repository.delete(clientDocument);
     }
 
-    private void addSearchStatement(SearchCriteria<Client> spec, String key, String value, SearchOperation operation) {
-        if (StringUtils.isNotBlank(key)) {
-            spec.add(new SearchStatement(key, value, operation));
-        }
-    }
+    public List<ClientDocument> filterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
+        List<ClientDocument> listClientDocument = new LinkedList<>();
+        repository.findAll().forEach(listClientDocument::add);
 
-    public List<Client> filterClients(String firstName, String lastName, String address, String phoneNumber, String email) {
-        SearchCriteria<Client> spec = new SearchCriteria<>();
-
-        this.addSearchStatement(spec,"firstName", firstName, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "lastName", lastName, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "address", address, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "phoneNumber", phoneNumber, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "email", email, SearchOperation.EQUAL);
-
-        return repository.findAll(spec);
+        return listClientDocument.stream()
+                .filter((ClientDocument doc) ->
+                {
+                    if (!doc.getFirstName().equals(firstName)) {
+                        return false;
+                    }
+                    if (!doc.getLastName().equals(lastName)) {
+                        return false;
+                    }
+                    if (!doc.getAddress().equals(address)) {
+                        return false;
+                    }
+                    if (!doc.getPhoneNumber().equals(phoneNumber)) {
+                        return false;
+                    }
+                    if (! doc.getEmail().equals(email))
+                    {
+                        return false;
+                    }
+                    return true;
+                    // TODO filter by booksWritten
+                })
+                .collect(Collectors.toList());
     }
 
 }

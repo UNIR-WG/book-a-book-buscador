@@ -21,10 +21,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,28 +81,19 @@
 			<version>4.1.0</version>
 		</dependency>
 
-		<!-- To use Feign client, a Rest Template equivalent with Eureka discovery awareness -->
+		<!-- To use Feign clientDocument, a Rest Template equivalent with Eureka discovery awareness -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
 			<version>1.4.7.RELEASE</version>
 		</dependency>
 
-		<!--Dependencias de Elasticsearch-->
+		<!-- For the elasticsearch clientDocument -->
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-elasticsearch</artifactId>
-			<version>4.2.3</version><!--$NO-MVN-MAN-VER$-->
-		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>${elasticsearch.custom.version}</version><!--$NO-MVN-MAN-VER$-->
-		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>${elasticsearch.custom.version}</version><!--$NO-MVN-MAN-VER$-->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+			<!-- Determine version https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch/versions.html -->
+			<version>3.2.1</version>
 		</dependency>
 
 	</dependencies>

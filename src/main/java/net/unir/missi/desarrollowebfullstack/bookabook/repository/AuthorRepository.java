@@ -1,77 +1,77 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
-import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import org.springframework.stereotype.Repository;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class AuthorRepository {
 
-    private final AuthorJpaRepository authorJpaRepository;
+    private final AuthorElasticRepository repository;
 
-
-    public List<Author> findAll() {
-        return authorJpaRepository.findAll();
+    public List<AuthorDocument> findAll() {
+        List<AuthorDocument> ret = new LinkedList<>();
+        repository.findAll().forEach(ret::add);
+        return ret;
     }
-    public Author getById(Long id) {
-        return authorJpaRepository.findById(id).orElse(null);
-    }
-
-    public Author save(Author author) {
-        return authorJpaRepository.save(author);
+    public AuthorDocument getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
-    public void delete(Author author) {
-        authorJpaRepository.delete(author);
+    public AuthorDocument save(AuthorDocument authorDocument) {
+        return repository.save(authorDocument);
     }
 
-    private void addSearchStatement(SearchCriteria<Author> spec, String key, String value, SearchOperation operation) {
-        if (StringUtils.isNotBlank(key)) {
-            spec.add(new SearchStatement(key, value, operation));
-        }
+    public void delete(AuthorDocument authorDocument) {
+        repository.delete(authorDocument);
     }
 
-    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritten) {
+    public List<AuthorDocument> search(String firstName, String lastName, LocalDate birthDate, String nationality,
+                                       String email, String webSite, String biography, BookDocument booksWritten) {
 
-        SearchCriteria<Author> spec = new SearchCriteria<>();
-        List<Author> listAuthor = authorJpaRepository.findAll(spec);
-        List<Author> filteredAuthors;
+        List<AuthorDocument> listAuthorDocument = new LinkedList<>();
+        repository.findAll().forEach(listAuthorDocument::add);
 
-        this.addSearchStatement(spec, "firstName", firstName, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "lastName", lastName, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "nationality", nationality, SearchOperation.EQUAL);
-        this.addSearchStatement(spec, "email", email, SearchOperation.EQUAL);
-        this.addSearchStatement(spec, "webSite", webSite, SearchOperation.MATCH);
-        this.addSearchStatement(spec, "biography", biography, SearchOperation.MATCH);
-
-        if(birthDate!=null) {
-            if (StringUtils.isNotBlank(String.valueOf(birthDate))) {
-                spec.add(new SearchStatement("birthDate", birthDate, SearchOperation.EQUAL));
-            }
-        }
-
-        if (booksWritten != null) {
-            filteredAuthors = listAuthor.stream()
-                    .filter(author -> author.getBooksWritten().stream()
-                            .anyMatch(book -> Objects.equals(booksWritten.getId(), book.getId())))
-                    .collect(Collectors.toList());
-        }else{
-            filteredAuthors = listAuthor;
-        }
-
-        return filteredAuthors;
+        return listAuthorDocument.stream()
+                .filter((AuthorDocument doc) ->
+                {
+                    if (!doc.getFirstName().equals(firstName)) {
+                        return false;
+                    }
+                    if (!doc.getLastName().equals(lastName)) {
+                        return false;
+                    }
+                    if (!doc.getBirthDate().equals(birthDate)) {
+                        return false;
+                    }
+                    if (!doc.getNationality().equals(nationality)) {
+                        return false;
+                    }
+                    if (! doc.getEmail().equals(email))
+                    {
+                        return false;
+                    }
+                    if (! doc.getWebSite().equals(webSite))
+                    {
+                        return false;
+                    }
+                    if (! doc.getBiography().equals(biography))
+                    {
+                        return false;
+                    }
+                    return true;
+                    // TODO filter by booksWritten
+                })
+                .collect(Collectors.toList());
     }
 
 

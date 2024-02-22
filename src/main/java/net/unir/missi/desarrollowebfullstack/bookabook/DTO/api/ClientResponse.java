@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.model.api;
+package net.unir.missi.desarrollowebfullstack.bookabook.DTO.api;
 
 import lombok.*;
 
@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ClientDto {
-
+public class ClientResponse {
+    private Long id;
     private String firstName;
     private String lastName;
     private String address;

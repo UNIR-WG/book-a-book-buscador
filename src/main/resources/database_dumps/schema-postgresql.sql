@@ -18,7 +18,7 @@ CREATE TABLE authors (
                          biography TEXT,
                          books_ids BIGINT[] REFERENCES books(id)
 );
-CREATE TABLE clients (
+CREATE TABLE clientDocuments (
                          id BIGSERIAL PRIMARY KEY,
                          firstName VARCHAR(50) NOT NULL,
                          lastName VARCHAR(50) NOT NULL,

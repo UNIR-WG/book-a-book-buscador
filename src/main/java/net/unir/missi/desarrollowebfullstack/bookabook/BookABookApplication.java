@@ -10,12 +10,6 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class BookABookApplication {
 
-	@LoadBalanced
-	@Bean
-	public RestTemplate restTemplate(){
-		return new RestTemplate();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(BookABookApplication.class, args);
 	}
