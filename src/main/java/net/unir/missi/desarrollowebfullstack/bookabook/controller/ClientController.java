@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.DeleteResponse;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.ClientDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Client;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.ClientDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.IClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +32,12 @@ public class ClientController {
             summary = "Se devuelve una lista de todos los clientes a partir de una búsqueda por filtro.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Datos de cliente introducidos incorrectos.")
-    public ResponseEntity<List<Client>> getClients(
+    public ResponseEntity<List<ClientDocument>> getClients(
             @Parameter(name = "firstName", description = "Nombre")
             @RequestParam(required = false) String firstName,
             @Parameter(name = "lastName", description = "Apellido")
@@ -49,8 +49,8 @@ public class ClientController {
             @Parameter(name = "email", description = "Email")
             @RequestParam(required = false) String email) {
 
-        List<Client> clients = clientService.getFilterClients(firstName, lastName, address, phoneNumber, email);
-        return clients != null ? ResponseEntity.ok(clients) : ResponseEntity.notFound().build();
+        List<ClientDocument> clientDocuments = clientService.getFilterClients(firstName, lastName, address, phoneNumber, email);
+        return clientDocuments != null ? ResponseEntity.ok(clientDocuments) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/clients/{clientId}")
@@ -60,14 +60,14 @@ public class ClientController {
             summary = "Se devuelve la información de un cliente a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "No se ha encontrado el cliente con el identificador indicado.")
-    public ResponseEntity<Client> getClient(@PathVariable String clientId) {
-        Client client = clientService.getClient(clientId);
-        return client != null ? ResponseEntity.ok(client) : ResponseEntity.notFound().build();
+    public ResponseEntity<ClientDocument> getClient(@PathVariable String clientId) {
+        ClientDocument clientDocument = clientService.getClient(clientId);
+        return clientDocument != null ? ResponseEntity.ok(clientDocument) : ResponseEntity.notFound().build();
     }
 
     @PostMapping("/clients")
@@ -81,14 +81,14 @@ public class ClientController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDto.class))))
     @ApiResponse(
             responseCode = "201",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Datos introducidos incorrectos.")
-    public ResponseEntity<Client> addClient(@RequestBody ClientDto requestClient) {
-        Client clientAdded = clientService.addClient(requestClient);
-        return clientAdded != null ? ResponseEntity.status(HttpStatus.CREATED).body(clientAdded) : ResponseEntity.badRequest().build();
+    public ResponseEntity<ClientDocument> addClient(@RequestBody ClientDto requestClient) {
+        ClientDocument clientDocumentAdded = clientService.addClient(requestClient);
+        return clientDocumentAdded != null ? ResponseEntity.status(HttpStatus.CREATED).body(clientDocumentAdded) : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/clients/{clientId}")
@@ -120,14 +120,14 @@ public class ClientController {
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = ClientDto.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Cliente no encontrado.")
-    public ResponseEntity<Client> updateClient(@PathVariable String clientId, @RequestBody ClientDto client) {
-        Client updatedClient = clientService.updateClient(clientId, client);
-        return updatedClient != null ? ResponseEntity.ok(updatedClient) : ResponseEntity.notFound().build();
+    public ResponseEntity<ClientDocument> updateClient(@PathVariable String clientId, @RequestBody ClientDto client) {
+        ClientDocument updatedClientDocument = clientService.updateClient(clientId, client);
+        return updatedClientDocument != null ? ResponseEntity.ok(updatedClientDocument) : ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/clients/{clientId}")
@@ -141,14 +141,14 @@ public class ClientController {
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = ClientDto.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Client.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
             description = "Cliente no encontrado.")
-    public ResponseEntity<Client> updateClientAttribute(@PathVariable String clientId, @RequestBody String requestClientAttribute) {
-        Client clientModified = clientService.updateClientAttribute(clientId, requestClientAttribute);
-        return clientModified != null ? ResponseEntity.ok(clientModified) : ResponseEntity.notFound().build();
+    public ResponseEntity<ClientDocument> updateClientAttribute(@PathVariable String clientId, @RequestBody String requestClientAttribute) {
+        ClientDocument clientDocumentModified = clientService.updateClientAttribute(clientId, requestClientAttribute);
+        return clientDocumentModified != null ? ResponseEntity.ok(clientDocumentModified) : ResponseEntity.notFound().build();
     }
 
 }

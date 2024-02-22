@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.document;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @NoArgsConstructor
 @Builder
 @ToString
-public class Book {
+public class BookDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,7 +35,7 @@ public class Book {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id")
     @JsonBackReference
-    private Author author;
+    private AuthorDocument authorDocument;
 
     public void update(BookRequest bookRequest) {
         this.isbn = bookRequest.getIsbn();

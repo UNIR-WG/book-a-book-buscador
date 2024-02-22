@@ -1,4 +1,4 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.document;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class Client {
+public class ClientDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -2,8 +2,8 @@ package net.unir.missi.desarrollowebfullstack.bookabook.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,18 +28,18 @@ public class AuthorDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Long> booksWrittenId;
 
-    public AuthorDto(Author authorModel) {
-        this.id = authorModel.getId();
-        this.firstName = authorModel.getFirstName();
-        this.lastName = authorModel.getLastName();
-        this.birthDate = authorModel.getBirthDate();
-        this.nationality = authorModel.getNationality();
-        this.email = authorModel.getEmail();
-        this.webSite = authorModel.getWebSite();
-        this.biography = authorModel.getBiography();
+    public AuthorDto(AuthorDocument authorDocumentModel) {
+        this.id = authorDocumentModel.getId();
+        this.firstName = authorDocumentModel.getFirstName();
+        this.lastName = authorDocumentModel.getLastName();
+        this.birthDate = authorDocumentModel.getBirthDate();
+        this.nationality = authorDocumentModel.getNationality();
+        this.email = authorDocumentModel.getEmail();
+        this.webSite = authorDocumentModel.getWebSite();
+        this.biography = authorDocumentModel.getBiography();
         List<Long> tempBook = new ArrayList<>();
-        if (authorModel.getBooksWritten() != null || !authorModel.getBooksWritten().isEmpty() ){
-            for (Book book : authorModel.getBooksWritten())
+        if (authorDocumentModel.getBooksWritten() != null || !authorDocumentModel.getBooksWritten().isEmpty() ){
+            for (BookDocument book : authorDocumentModel.getBooksWritten())
                 tempBook.add(book.getId());
         }
 

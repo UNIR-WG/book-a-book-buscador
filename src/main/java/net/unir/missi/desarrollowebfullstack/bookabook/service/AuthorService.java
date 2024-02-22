@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class AuthorService implements IAuthorService{
                     || bookId!=null){
 
 
-                Book bookList;
+                BookDocument bookList;
                 if(bookId!=null) {
                     bookList = bookRepository.getById(bookId);
                     if (bookList == null) {
@@ -54,19 +54,19 @@ public class AuthorService implements IAuthorService{
     @Override
     public AuthorDto createAuthor(AuthorDto author) throws RuntimeException
     {
-            Author authorModel = new Author(author);
+            AuthorDocument authorDocumentModel = new AuthorDocument(author);
 
-            return new AuthorDto(authorRepository.save(authorModel));
+            return new AuthorDto(authorRepository.save(authorDocumentModel));
     }
 
     @Override
     public AuthorDto getAuthorById(String idAuthor) throws RuntimeException
     {
 
-            Author authorModel = authorRepository.getById(Long.valueOf(idAuthor));
+            AuthorDocument authorDocumentModel = authorRepository.getById(Long.valueOf(idAuthor));
 
-            if(authorModel!=null)
-                return new AuthorDto(authorModel);
+            if(authorDocumentModel !=null)
+                return new AuthorDto(authorDocumentModel);
             else
                 return null;
 
@@ -76,66 +76,66 @@ public class AuthorService implements IAuthorService{
     public AuthorDto modifyAuthorData(AuthorDto tempAuthor, AuthorDto authorData) throws RuntimeException
     {
 
-            Author authorToChange = authorRepository.getById(tempAuthor.getId());
+            AuthorDocument authorDocumentToChange = authorRepository.getById(tempAuthor.getId());
 
             if (authorData.getFirstName() != null)
-                authorToChange.setFirstName(authorData.getFirstName());
+                authorDocumentToChange.setFirstName(authorData.getFirstName());
 
             if (authorData.getLastName() != null)
-                authorToChange.setLastName(authorData.getLastName());
+                authorDocumentToChange.setLastName(authorData.getLastName());
 
             if (authorData.getBirthDate() != null)
-                authorToChange.setBirthDate(authorData.getBirthDate());
+                authorDocumentToChange.setBirthDate(authorData.getBirthDate());
 
             if (authorData.getEmail() != null)
-                authorToChange.setEmail(authorData.getEmail());
+                authorDocumentToChange.setEmail(authorData.getEmail());
 
             if (authorData.getWebSite() != null)
-                authorToChange.setWebSite(authorData.getWebSite());
+                authorDocumentToChange.setWebSite(authorData.getWebSite());
 
             if (authorData.getNationality() != null)
-                authorToChange.setNationality(authorData.getNationality());
+                authorDocumentToChange.setNationality(authorData.getNationality());
 
             if (authorData.getBiography() != null)
-                authorToChange.setBiography(authorData.getBiography());
+                authorDocumentToChange.setBiography(authorData.getBiography());
 
-            authorRepository.save(authorToChange);
+            authorRepository.save(authorDocumentToChange);
 
-            return new AuthorDto(authorToChange);
+            return new AuthorDto(authorDocumentToChange);
 
     }
 
     @Override
     public AuthorDto modifyAllAuthorData(AuthorDto prev, AuthorDto authorData) throws RuntimeException
     {
-            Author authorToChange = authorRepository.getById(prev.getId());
+            AuthorDocument authorDocumentToChange = authorRepository.getById(prev.getId());
 
-            authorToChange.setFirstName(authorData.getFirstName());
+            authorDocumentToChange.setFirstName(authorData.getFirstName());
 
-            authorToChange.setLastName(authorData.getLastName());
+            authorDocumentToChange.setLastName(authorData.getLastName());
 
-            authorToChange.setBirthDate(authorData.getBirthDate());
+            authorDocumentToChange.setBirthDate(authorData.getBirthDate());
 
-            authorToChange.setEmail(authorData.getEmail());
+            authorDocumentToChange.setEmail(authorData.getEmail());
 
-            authorToChange.setWebSite(authorData.getWebSite());
+            authorDocumentToChange.setWebSite(authorData.getWebSite());
 
-            authorToChange.setNationality(authorData.getNationality());
+            authorDocumentToChange.setNationality(authorData.getNationality());
 
-            authorToChange.setBiography(authorData.getBiography());
+            authorDocumentToChange.setBiography(authorData.getBiography());
 
-            authorRepository.save(authorToChange);
+            authorRepository.save(authorDocumentToChange);
 
-            return new AuthorDto(authorToChange);
+            return new AuthorDto(authorDocumentToChange);
 
     }
 
     @Override
     public AuthorDto deleteAuthor(AuthorDto prev) throws RuntimeException
     {
-        Author author = authorRepository.getById(prev.getId());
+        AuthorDocument authorDocument = authorRepository.getById(prev.getId());
 
-        authorRepository.delete(author);
+        authorRepository.delete(authorDocument);
         return prev;
 
     }

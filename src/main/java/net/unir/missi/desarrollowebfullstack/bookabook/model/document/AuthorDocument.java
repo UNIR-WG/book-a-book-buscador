@@ -1,29 +1,24 @@
-package net.unir.missi.desarrollowebfullstack.bookabook.model.sql;
+package net.unir.missi.desarrollowebfullstack.bookabook.model.document;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.api.AuthorDto;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "authors")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Author {
+@Document(indexName = "author")
+public class AuthorDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -45,35 +40,9 @@ public class Author {
     private String biography;
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Book> booksWritten;
+    private List<BookDocument> booksWritten;
 
-    public Author(Author author) {
-        this.id = author.getId();
-        this.firstName = author.getFirstName();
-        this.lastName = author.getLastName();
-        this.birthDate = author.getBirthDate();
-        this.nationality = author.getNationality();
-        this.email = author.getEmail();
-        this.webSite = author.getWebSite();
-        this.biography = author.getBiography();
-        this.booksWritten = author.getBooksWritten();
-    }
-
-
-    public Author(AuthorDto author) {
-        this.id = author.getId();
-        this.firstName = author.getFirstName();
-        this.lastName = author.getLastName();
-        this.birthDate = author.getBirthDate();
-        this.nationality = author.getNationality();
-        this.email = author.getEmail();
-        this.webSite = author.getWebSite();
-        this.biography = author.getBiography();
-        this.booksWritten = new ArrayList<>();
-
-    }
-
-    public List<Book> getBooksWritten() {
+    public List<BookDocument> getBooksWritten() {
         return booksWritten;
     }
 
@@ -141,7 +110,7 @@ public class Author {
         this.biography = biography;
     }
 
-    public void setBooksWritten(List<Book> booksWritten) {
+    public void setBooksWritten(List<BookDocument> booksWritten) {
         this.booksWritten = booksWritten;
     }
 }

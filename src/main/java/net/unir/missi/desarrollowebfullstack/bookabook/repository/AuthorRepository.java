@@ -3,54 +3,52 @@ package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Author;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.AuthorDocument;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchCriteria;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchOperation;
 import net.unir.missi.desarrollowebfullstack.bookabook.config.search.SearchStatement;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
 @RequiredArgsConstructor
 @Slf4j
 public class AuthorRepository {
 
-    private final AuthorJpaRepository authorJpaRepository;
+    private final AuthorElasticRepository repository;
 
-
-    public List<Author> findAll() {
-        List<Author> ret = new LinkedList<>();
-        authorJpaRepository.findAll().forEach(ret::add);
+    public List<AuthorDocument> findAll() {
+        List<AuthorDocument> ret = new LinkedList<>();
+        repository.findAll().forEach(ret::add);
         return ret;
     }
-    public Author getById(Long id) {
-        return authorJpaRepository.findById(id).orElse(null);
+    public AuthorDocument getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
-    public Author save(Author author) {
-        return authorJpaRepository.save(author);
+    public AuthorDocument save(AuthorDocument authorDocument) {
+        return repository.save(authorDocument);
     }
 
-    public void delete(Author author) {
-        authorJpaRepository.delete(author);
+    public void delete(AuthorDocument authorDocument) {
+        repository.delete(authorDocument);
     }
 
-    private void addSearchStatement(SearchCriteria<Author> spec, String key, String value, SearchOperation operation) {
+    private void addSearchStatement(SearchCriteria<AuthorDocument> spec, String key, String value, SearchOperation operation) {
         if (StringUtils.isNotBlank(key)) {
             spec.add(new SearchStatement(key, value, operation));
         }
     }
 
-    public List<Author> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, Book booksWritten) {
+    public List<AuthorDocument> search(String firstName, String lastName, LocalDate birthDate, String nationality, String email, String webSite, String biography, BookDocument booksWritten) {
 
-        SearchCriteria<Author> spec = new SearchCriteria<>();
-        List<Author> listAuthor = new LinkedList<>();
-        authorJpaRepository.findAll().forEach(listAuthor::add);
-        List<Author> filteredAuthors;
+        SearchCriteria<AuthorDocument> spec = new SearchCriteria<>();
+        List<AuthorDocument> listAuthorDocument = new LinkedList<>();
+        repository.findAll().forEach(listAuthorDocument::add);
+        List<AuthorDocument> filteredAuthorDocuments;
 
         this.addSearchStatement(spec, "firstName", firstName, SearchOperation.MATCH);
         this.addSearchStatement(spec, "lastName", lastName, SearchOperation.MATCH);
@@ -66,15 +64,15 @@ public class AuthorRepository {
         }
 
         if (booksWritten != null) {
-            filteredAuthors = listAuthor.stream()
+            filteredAuthorDocuments = listAuthorDocument.stream()
                     .filter(author -> author.getBooksWritten().stream()
                             .anyMatch(book -> Objects.equals(booksWritten.getId(), book.getId())))
                     .collect(Collectors.toList());
         }else{
-            filteredAuthors = listAuthor;
+            filteredAuthorDocuments = listAuthorDocument;
         }
 
-        return filteredAuthors;
+        return filteredAuthorDocuments;
     }
 
 

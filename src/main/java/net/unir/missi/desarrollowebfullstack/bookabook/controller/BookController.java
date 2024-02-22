@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookRequest;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.BookResponse;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.api.DeleteResponse;
-import net.unir.missi.desarrollowebfullstack.bookabook.model.sql.Book;
+import net.unir.missi.desarrollowebfullstack.bookabook.model.document.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.service.IBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class BookController {
             summary = "Se devuelve una lista de todos los libros almacenados en la base de datos.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     public ResponseEntity<List<BookResponse>> getBooks(
             @RequestHeader Map<String, String> headers,
             @Parameter(name = "isbn", description = "Código ISBN del libro")  //Regex ?
@@ -69,7 +69,7 @@ public class BookController {
             summary = "Se devuelve un libro a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),
@@ -123,7 +123,7 @@ public class BookController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookRequest.class))))
     @ApiResponse(
             responseCode = "201",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
@@ -150,7 +150,7 @@ public class BookController {
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = String.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema()),
@@ -176,7 +176,7 @@ public class BookController {
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = BookRequest.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDocument.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema()),

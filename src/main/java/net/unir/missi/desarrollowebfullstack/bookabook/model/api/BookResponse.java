@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 @ToString
 public class BookResponse {
-
     private Long id;
     private String isbn;
     private String name;
