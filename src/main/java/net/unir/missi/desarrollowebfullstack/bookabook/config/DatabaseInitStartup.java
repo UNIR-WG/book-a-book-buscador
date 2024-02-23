@@ -18,12 +18,12 @@ import java.util.logging.Logger;
 @Component
 public class DatabaseInitStartup implements ApplicationListener<ApplicationReadyEvent> {
 
-    //@Autowired
-    //private AuthorRepository authorRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @Override
     public void onApplicationEvent(final @NotNull ApplicationReadyEvent event) {
-        /*try{
+        try{
             if (this.authorRepository.getById(1L) != null)
             {
                 //this.initializeDB();
@@ -32,11 +32,10 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
         catch (Exception e)
         {
             Logger.getLogger("DB init is failing with " + Arrays.toString(e.getStackTrace()));
-        }*/
+        }
     }
 
-
-    /*private void initializeDB()
+    private void initializeDB()
     {
         Logger.getGlobal().info("INITIALIZING DB");
 
@@ -55,7 +54,5 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
 
         Logger.getGlobal().info("END INITIALIZING DB");
     }
-
-     */
 }
 
