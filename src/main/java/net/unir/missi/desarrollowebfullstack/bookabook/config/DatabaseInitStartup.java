@@ -24,7 +24,9 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
     @Override
     public void onApplicationEvent(final @NotNull ApplicationReadyEvent event) {
         try{
-            if (this.authorRepository.getById(1L) != null)
+            Logger.getGlobal().info("TRYING TO INITIALIZE DB");
+
+            if (this.authorRepository.getById(1L) == null)
             {
                 this.initializeDB();
             }
