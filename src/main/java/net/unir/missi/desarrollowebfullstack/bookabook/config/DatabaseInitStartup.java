@@ -26,7 +26,7 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
         try{
             if (this.authorRepository.getById(1L) != null)
             {
-                //this.initializeDB();
+                this.initializeDB();
             }
         }
         catch (Exception e)
