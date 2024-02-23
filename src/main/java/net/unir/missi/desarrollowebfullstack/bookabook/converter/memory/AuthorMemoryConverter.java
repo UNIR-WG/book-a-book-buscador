@@ -35,16 +35,23 @@ public class AuthorMemoryConverter {
         document.setWebSite(author.webSite());
         document.setBiography(author.biography());
 
-        List<BookDocument> booksWritten = new LinkedList<>();
-        for (Long id : author.booksWritten())
+        if (author.booksWritten() != null)
         {
-            if (repository.getById(id) == null)
+            List<BookDocument> booksWritten = new LinkedList<>();
+            for (Long id : author.booksWritten())
             {
-                throw new RuntimeException("The book with id " + id.toString() + " does not exist");
+                if (repository.getById(id) == null)
+                {
+                    throw new RuntimeException("The book with id " + id.toString() + " does not exist");
+                }
+                booksWritten.add(repository.getById(id));
             }
-            booksWritten.add(repository.getById(id));
+            document.setBooksWritten(booksWritten);
         }
-        document.setBooksWritten(booksWritten);
+        else
+        {
+            document.setBooksWritten(new LinkedList<>());
+        }
 
         return document;
     }
@@ -52,6 +59,14 @@ public class AuthorMemoryConverter {
     public Author fromDocument(final AuthorDocument document) {
         if (document == null) {
             return null;
+        }
+
+        List<Long> bookIds = new LinkedList<Long>();
+        if (document.getBooksWritten() != null)
+        {
+            bookIds = document.getBooksWritten()
+                    .stream().map(BookDocument::getId)
+                    .collect(Collectors.toList());
         }
 
         return new Author(
@@ -64,7 +79,6 @@ public class AuthorMemoryConverter {
                 document.getWebSite(),
                 document.getBiography(),
 
-                document.getBooksWritten().stream().map(BookDocument::getId)
-                        .collect(Collectors.toList()));
+                bookIds);
     }
 }

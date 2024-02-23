@@ -42,6 +42,11 @@ public class BookMemoryConverter {
             return null;
         }
 
+        Long author = null;
+        if (document.getAuthorDocument() == null)
+        {
+            author = null;
+        }
         return new Book(
                 document.getId(),
                 document.getIsbn(),
@@ -49,6 +54,6 @@ public class BookMemoryConverter {
                 document.getLanguage(),
                 document.getDescription(),
                 document.getCategory(),
-                document.getAuthorDocument().getId());
+                author);
     }
 }

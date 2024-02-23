@@ -7,17 +7,24 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 public class BookRepository {
 
+    private static Long numBooks = 3L;
     private final BookElasticRepository repository;
 
     public List<BookDocument> getBooks() {
         List<BookDocument> ret = new LinkedList<>();
         repository.findAll().forEach(ret::add);
+
+        Logger.getGlobal().warning("list content:" + ret.toString());
+        Logger.getGlobal().warning("ffins all repo" + repository.findAll().toString());
+        //Logger.getGlobal().warning((Supplier<String>) repository.findAll());
         return ret;
     }
 
@@ -26,7 +33,13 @@ public class BookRepository {
     }
 
     public BookDocument save(BookDocument book) {
-        return repository.save(book);
+        if (book.getId() == null)
+        {
+            book.setId(numBooks);
+            numBooks++;
+        }
+        BookDocument r = repository.save(book);
+        return r;
     }
 
     public void delete(BookDocument book) {

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.repository.AuthorRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.BookRepository;
+import net.unir.missi.desarrollowebfullstack.bookabook.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -21,8 +23,15 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
     @Override
     public void onApplicationEvent(final @NotNull ApplicationReadyEvent event) {
+
         try{
             Logger.getGlobal().info("TRYING TO INITIALIZE DB");
 
@@ -51,8 +60,12 @@ public class DatabaseInitStartup implements ApplicationListener<ApplicationReady
         booksAuthor1.add(book2);
         authorDocument1.setBooksWritten(booksAuthor1);
 
-        // Guardamos autores en BD, save de libros se hace en cascada
         this.authorRepository.save(authorDocument1);
+        Logger.getGlobal().info("SAVED AUTHOR");
+
+        this.bookRepository.save(book1);
+        this.bookRepository.save(book2);
+        Logger.getGlobal().info("SAVED BOOKS");
 
         Logger.getGlobal().info("END INITIALIZING DB");
     }

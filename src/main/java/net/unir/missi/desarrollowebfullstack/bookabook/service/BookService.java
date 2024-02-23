@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +60,9 @@ public class BookService implements IBookService {
         } else {
             books = bookRepository.getBooks();
         }
+        Logger.getGlobal().warning("the books in service are: " + books.toString());
+        Logger.getGlobal().warning("the books in service are: " + bookRepository.getBooks().toString());
+
         return books.stream().map(
                 (BookDocument b) ->
                 {

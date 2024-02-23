@@ -1,22 +1,26 @@
 package net.unir.missi.desarrollowebfullstack.bookabook.repository;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.AuthorDocument;
 import net.unir.missi.desarrollowebfullstack.bookabook.model.BookDocument;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@Slf4j
 @Component
 public class AuthorRepository {
 
+    private static Long numAuthors = 2L;
+
     private final AuthorElasticRepository repository;
+
+    public AuthorRepository(AuthorElasticRepository repository) {
+        this.repository = repository;
+    }
 
     public List<AuthorDocument> findAll() {
         List<AuthorDocument> ret = new LinkedList<>();
@@ -28,7 +32,27 @@ public class AuthorRepository {
     }
 
     public AuthorDocument save(AuthorDocument authorDocument) {
-        return repository.save(authorDocument);
+        Logger.getGlobal().info("REPO END INITIALIZING DB");
+        AuthorDocument a = null;
+        try
+        {
+            if (authorDocument.getId() == null)
+            {
+                authorDocument.setId(numAuthors);
+                numAuthors++;
+            }
+            a = repository.save(authorDocument);
+
+        }
+        catch (Exception e)
+        {
+            Logger.getGlobal().warning("exception message" + e.getMessage());
+            Logger.getGlobal().warning("exception stack trace" + Arrays.toString(e.getStackTrace()));
+            Logger.getGlobal().warning("exception cause" + e.getCause());
+            Logger.getGlobal().warning("exception: " + e);
+        }
+        Logger.getGlobal().info("REPO AFTER SAVE INITIALIZING DB");
+        return a;
     }
 
     public void delete(AuthorDocument authorDocument) {
