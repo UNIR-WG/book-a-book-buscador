@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class ClientRepository {
 
+    private static Long numClients = 1L;
     private final ClientElasticRepository repository;
 
     public ClientDocument getClientById(Long id) {
@@ -25,6 +26,11 @@ public class ClientRepository {
     }
 
     public ClientDocument addClient(ClientDocument clientDocument) {
+        if (clientDocument.getId() == null)
+        {
+            clientDocument.setId(numClients);
+            numClients++;
+        }
         return repository.save(clientDocument);
     }
 
