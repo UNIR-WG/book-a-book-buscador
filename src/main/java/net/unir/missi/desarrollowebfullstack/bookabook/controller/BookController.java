@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -64,6 +65,8 @@ public class BookController {
 
         log.info("headers: {}", headers);
         List<Book> books = service.getBooks(isbn, name, language, description, category, authorId);
+        Logger.getGlobal().warning("the content of books is");
+        Logger.getGlobal().warning(books.toString());
         if (books == null)
         {
             return ResponseEntity.ok(null);
