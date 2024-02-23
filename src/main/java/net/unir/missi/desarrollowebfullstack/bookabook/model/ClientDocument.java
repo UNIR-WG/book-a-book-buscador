@@ -15,6 +15,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "client")
 public class ClientDocument {
     @Id
+    @Field(
+            type = FieldType.Long
+    )
     private Long id;
     @Field(
             type = FieldType.Text

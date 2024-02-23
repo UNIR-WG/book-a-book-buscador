@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class BookDocument {
     @Id
     @Field(
-            type = FieldType.Text
+            type = FieldType.Long
     )
     private Long id;
     @Field(
